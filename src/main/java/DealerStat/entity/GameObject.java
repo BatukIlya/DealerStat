@@ -6,32 +6,30 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyUser {
+public class GameObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
+    private String name;
 
-    private String lastName;
+    private String text;
 
-    private String password;
-
-    private String email;
+    @ManyToOne
+    private MyUser author;
 
     private LocalDate createdAt = LocalDate.now();
 
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    private LocalDate updatedAt;
 
-    private boolean isApproved = false;
+    @ManyToOne
+    private Game game;
 
 }

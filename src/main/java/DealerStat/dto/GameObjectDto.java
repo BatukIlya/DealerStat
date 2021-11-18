@@ -7,14 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyUserDto {
+public class GameObjectDto {
 
-    private String firstName;
+    private String name;
 
-    private String lastName;
-
-    private String password;
-
-    private String email;
+    private String text;
 
 }

@@ -3,34 +3,30 @@ package DealerStat.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyUser {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
+    private String message;
 
-    private String lastName;
+    @ManyToOne
+    private MyUser author;
 
-    private String password;
-
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MyUser trader;
 
     private LocalDate createdAt = LocalDate.now();
-
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
 
     private boolean isApproved = false;
 
