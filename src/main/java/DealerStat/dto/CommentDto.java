@@ -11,4 +11,6 @@ public class CommentDto {
 
     private String message;
 
+    private Double rating;
+
 }

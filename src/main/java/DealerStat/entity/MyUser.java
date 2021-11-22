@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -19,11 +17,13 @@ public class MyUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String firstName;
 
     private String lastName;
 
     private String password;
+
 
     private String email;
 
@@ -33,5 +33,6 @@ public class MyUser {
     private Role role = Role.USER;
 
     private boolean isApproved = false;
+
 
 }

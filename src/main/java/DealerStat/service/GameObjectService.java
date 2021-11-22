@@ -6,6 +6,9 @@ import DealerStat.repository.GameObjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GameObjectService {
@@ -15,7 +18,23 @@ public class GameObjectService {
     public GameObject createGameObject(GameObjectDto gameObjectDto) {
         GameObject gameObject = new GameObject();
         gameObject.setName(gameObjectDto.getName());
-        gameObject.setText(gameObject.getText());
+        gameObject.setText(gameObjectDto.getText());
         return gameObjectRepository.save(gameObject);
+    }
+
+    public GameObject updateGameObject(GameObjectDto gameObjectDto, Long id){
+        GameObject gameObject  = gameObjectRepository.findGameObjectById(id);
+        gameObject.setName(gameObjectDto.getName());
+        gameObject.setText(gameObjectDto.getText());
+        gameObject.setUpdatedAt(LocalDateTime.now());
+        return gameObjectRepository.save(gameObject);
+    }
+
+    public void deleteGameObject(Long id){
+        gameObjectRepository.deleteById(id);
+    }
+
+    public List<GameObject> showAll(){
+        return gameObjectRepository.findAll();
     }
 }

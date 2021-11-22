@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,9 +24,9 @@ public class GameObject {
     @ManyToOne
     private MyUser author;
 
-    private LocalDate createdAt = LocalDate.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     private Game game;
