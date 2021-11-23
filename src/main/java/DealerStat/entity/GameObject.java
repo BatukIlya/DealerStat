@@ -3,9 +3,12 @@ package DealerStat.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -24,11 +27,12 @@ public class GameObject {
     @ManyToOne
     private MyUser author;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreatedDate
+    private Date createdAt;
 
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    private Date updatedAt;
 
     @ManyToOne
     private Game game;
-
 }

@@ -26,7 +26,6 @@ public class GameObjectService {
         GameObject gameObject  = gameObjectRepository.findGameObjectById(id);
         gameObject.setName(gameObjectDto.getName());
         gameObject.setText(gameObjectDto.getText());
-        gameObject.setUpdatedAt(LocalDateTime.now());
         return gameObjectRepository.save(gameObject);
     }
 

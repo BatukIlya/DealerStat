@@ -3,12 +3,13 @@ package DealerStat.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -21,20 +22,19 @@ public class MyUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String firstName;
 
-//    private String lastName;
+    private String lastName;
 
     private String password;
 
-
     private String email;
 
-    private LocalDate createdAt = LocalDate.now();
+    @CreatedDate
+    private Date createAt;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "my_user_role", joinColumns = @JoinColumn(name = "my_user_id"))
+//    @CollectionTable(name = "my_user_role", joinColumns = @JoinColumn(name = "my_user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 

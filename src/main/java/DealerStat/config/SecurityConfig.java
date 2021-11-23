@@ -15,11 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -43,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
-                .defaultSuccessUrl("http://localhost:8070/swagger-ui.html#").failureUrl("/login?error").permitAll()
+                .defaultSuccessUrl("http://localhost:8099/swagger-ui.html#").failureUrl("/login?error").permitAll()
                 .and().logout();
     }
 }

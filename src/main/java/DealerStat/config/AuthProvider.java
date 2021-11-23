@@ -9,45 +9,38 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
 @Component
-public class AuthProvider implements AuthenticationProvider
-{
+public class AuthProvider implements AuthenticationProvider {
     @Autowired
     private MyUserService myUserService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException
-    {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
 
         MyUser myUser = (MyUser) myUserService.loadUserByUsername(username);
 
-        if(myUser != null && (myUser.getFirstName().equals(username)))
-        {
-            if(!passwordEncoder.matches(password, myUser.getPassword()))
-            {
+        if (myUser != null && (myUser.getEmail().equals(username))) {
+            if (!passwordEncoder.matches(password, myUser.getPassword())) {
                 throw new BadCredentialsException("Wrong password");
             }
 
             Collection<? extends GrantedAuthority> authorities = myUser.getAuthorities();
 
             return new UsernamePasswordAuthenticationToken(myUser, password, authorities);
-        }
-        else
+        } else
             throw new BadCredentialsException("Username not found");
     }
 
-    public boolean supports(Class<?> arg)
-    {
+    public boolean supports(Class<?> arg) {
         return true;
     }
 }
