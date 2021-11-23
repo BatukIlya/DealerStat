@@ -1,9 +1,12 @@
 package DealerStat.entity;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     ADMIN, TRADER, USER;
 
-    Role(){
-
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }

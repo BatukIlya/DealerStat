@@ -1,5 +1,6 @@
 package DealerStat.service;
 
+import DealerStat.config.AuthProvider;
 import DealerStat.dto.CommentDto;
 import DealerStat.dto.MyUserDto;
 import DealerStat.entity.Comment;
@@ -7,8 +8,14 @@ import DealerStat.entity.MyUser;
 import DealerStat.repository.CommentRepository;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,14 +29,16 @@ public class CommentService {
 
     private final MyUserService myUserService;
 
-    public Comment createComment(CommentDto commentDto, Long traiderId) {
+    public Comment createComment(CommentDto commentDto, Long traderId) {
         Comment comment = new Comment();
+        MyUser myUser1 = myUserRepository.findMyUserByFirstName(SecurityContextHolder.getContext().getAuthentication().getName());
         comment.setMessage(commentDto.getMessage());
-        comment.setTrader(myUserRepository.findMyUserById(traiderId));
+        comment.setAuthor(myUser1);
+        comment.setTrader(myUserRepository.findMyUserById(traderId));
         return commentRepository.save(comment);
     }
 
-    public Comment createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto){
+    public Comment createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto) {
         myUserService.createUser(myUserDto);
         Comment comment = new Comment();
         comment.setMessage(commentDto.getMessage());
@@ -60,7 +69,10 @@ public class CommentService {
 
     public void deleteComment(Long id) {
 
-        commentRepository.deleteById(id);
-    }
-
-}
+        if (myUserRepository.findMyUserByFirstName(SecurityContextHolder.getContext()
+        .getAuthentication().getName()).getId() == commentRepository.findCommentById(id).getAuthor().getId()) {
+            commentRepository.deleteById(id);
+        }else{
+            throw new RuntimeException("Access denied");
+        }
+    }}

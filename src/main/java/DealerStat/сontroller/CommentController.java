@@ -3,11 +3,16 @@ package DealerStat.сontroller;
 import DealerStat.dto.CommentDto;
 import DealerStat.dto.MyUserDto;
 import DealerStat.entity.Comment;
+import DealerStat.entity.MyUser;
 import DealerStat.service.CommentService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,7 +22,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/createComment/{traderId}")
+    @PostMapping("/comment/create/{traderId}")
     public Comment createComment(@RequestBody CommentDto commentDto, @PathVariable Long traderId) {
         return commentService.createComment(commentDto, traderId);
     }
@@ -42,6 +47,7 @@ public class CommentController {
         return commentService.approveComment(commentId);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @DeleteMapping("/comment/delete/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);

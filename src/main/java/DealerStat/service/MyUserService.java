@@ -2,22 +2,36 @@ package DealerStat.service;
 
 import DealerStat.dto.MyUserDto;
 import DealerStat.entity.MyUser;
+import DealerStat.entity.Role;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class MyUserService {
+public class MyUserService implements UserDetailsService {
 
     private final MyUserRepository myUserRepository;
+
+
+    private final PasswordEncoder passwordEncoder;
 
     public MyUser createUser(MyUserDto myUserDto) {
         MyUser myUser = new MyUser();
         myUser.setFirstName(myUserDto.getFirstName());
-        myUser.setLastName(myUserDto.getLastName());
-        myUser.setPassword(myUserDto.getPassword());
+//        myUser.setLastName(myUserDto.getLastName());
+        myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
         myUser.setEmail(myUserDto.getEmail());
+        myUser.setRoles(Collections.singleton(Role.USER));
         return myUserRepository.save(myUser);
     }
 
@@ -25,5 +39,15 @@ public class MyUserService {
         MyUser myUser = myUserRepository.findMyUserById(userId);
         myUser.setApproved(true);
         return myUserRepository.save(myUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        MyUser userFindByUsername = myUserRepository.findMyUserByFirstName(username);
+
+        if(userFindByUsername != null) {
+            return userFindByUsername;
+        }
+        return null;
     }
 }
