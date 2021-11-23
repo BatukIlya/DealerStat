@@ -1,5 +1,6 @@
 package DealerStat.dto;
 
+import DealerStat.entity.Game;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -6,6 +6,8 @@ import DealerStat.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GameService {
@@ -18,4 +20,13 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    public List<Game> showAllGames(){
+        return gameRepository.findAll();
+    }
+
+    public Game updateGame(GameDto gameDto, Long id){
+        Game game = gameRepository.findGameById(id);
+        game.setName(gameDto.getName());
+        return gameRepository.save(game);
+    }
 }
