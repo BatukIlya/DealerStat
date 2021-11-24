@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-@RestController("/admin")
+@RestController
 @Api
 @RequiredArgsConstructor
 public class MyUserController {
@@ -26,14 +26,13 @@ public class MyUserController {
         return "registration ";
     }
 
-
     @PostMapping("/registration")
     public MyUser createUser(@RequestBody MyUserDto myUserDto) {
         return myUserService.createUser(myUserDto);
     }
 
-    @PutMapping("/users/tickets/{userId}/")
-    public MyUser approveUser(@PathVariable Long userId){
-        return myUserService.approveUser(userId);
     }
-}
+
+
+
+

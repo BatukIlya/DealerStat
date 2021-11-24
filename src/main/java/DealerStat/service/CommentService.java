@@ -4,10 +4,10 @@ import DealerStat.dto.CommentDto;
 import DealerStat.dto.MyUserDto;
 import DealerStat.entity.Comment;
 import DealerStat.entity.MyUser;
+import DealerStat.entity.Role;
 import DealerStat.repository.CommentRepository;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,20 +23,27 @@ public class CommentService {
     private final MyUserService myUserService;
 
     public Comment createComment(CommentDto commentDto, Long traderId) {
-        Comment comment = new Comment();
-        MyUser myUser1 = myUserRepository.findMyUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        comment.setMessage(commentDto.getMessage());
-        comment.setAuthor(myUser1);
-        comment.setTrader(myUserRepository.findMyUserById(traderId));
-        return commentRepository.save(comment);
+        if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
+            Comment comment = new Comment();
+            comment.setMessage(commentDto.getMessage());
+            comment.setAuthor(myUserRepository.findMyUserById(myUserService.getIdAuthorizedUser()));
+            comment.setTrader(myUserRepository.findMyUserById(traderId));
+            comment.setRating(commentDto.getRating());
+            return commentRepository.save(comment);
+        } else {
+            throw new RuntimeException("Rating must be >0 and <5");
+        }
+
     }
 
     public Comment createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto) {
-        myUserService.createUser(myUserDto);
-        Comment comment = new Comment();
-        comment.setMessage(commentDto.getMessage());
-        comment.setTrader(myUserRepository.findMyUserByEmail(myUserDto.getEmail()));
-        return commentRepository.save(comment);
+        if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
+            myUserService.createUser(myUserDto);
+            MyUser myUser = myUserRepository.findMyUserByEmail(myUserDto.getEmail());
+            return createComment(commentDto, myUser.getId());
+        } else {
+            throw new RuntimeException("Rating must be >0 and <5");
+        }
     }
 
     public Comment showComment(Long id) {
@@ -47,23 +54,26 @@ public class CommentService {
         return commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id);
     }
 
-    public Comment approveComment(Long id) {
-        Comment comment = commentRepository.findCommentById(id);
-        comment.setApproved(true);
-        return commentRepository.save(comment);
-    }
 
-    public Comment updateComment(String message, Long id) {
-        Comment comment = commentRepository.findCommentById(id);
-        comment.setMessage(message);
-        return commentRepository.save(comment);
+    public Comment updateComment(CommentDto commentDto, Long id) {
+        if (commentDto.getRating() <= 5 && commentDto.getRating() >= 0) {
+            Comment comment = commentRepository.findCommentById(id);
+            comment.setMessage(commentDto.getMessage());
+            comment.setRating(commentDto.getRating());
+            commentRepository.save(comment);
+            myUserService.refreshRating(comment.getId());
+            return comment;
+        }else {
+            throw new RuntimeException("Rating must be >0 and <5");
+        }
     }
 
     public void deleteComment(Long id) {
-
-        if (myUserRepository.findMyUserByEmail(SecurityContextHolder.getContext()
-                .getAuthentication().getName()).getId() == commentRepository.findCommentById(id).getAuthor().getId()) {
+        Comment comment = commentRepository.findCommentById(id);
+        if (myUserService.getIdAuthorizedUser().equals(comment.getAuthor().getId())
+                || (myUserService.checkRole(Role.ADMIN))) {
             commentRepository.deleteById(id);
+            myUserService.refreshRating(comment.getTrader().getId());
         } else {
             throw new RuntimeException("Access denied");
         }
