@@ -26,10 +26,10 @@ public class MyUserController {
         return "registration ";
     }
 
-    @PostMapping("/registration")
-    public MyUser createUser(@RequestBody MyUserDto myUserDto) {
-        return myUserService.createUser(myUserDto);
-    }
+//    @PostMapping("/registration")
+//    public MyUser createUser(@RequestBody MyUserDto myUserDto) {
+//        return myUserService.createUser(myUserDto);
+//    }
 
     }
 

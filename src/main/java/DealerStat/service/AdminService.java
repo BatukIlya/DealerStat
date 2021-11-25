@@ -33,7 +33,7 @@ public class AdminService {
         Comment comment = commentRepository.findCommentById(id);
         comment.setApproved(true);
         commentRepository.save(comment);
-        myUserService.refreshRating(comment.getTrader().getId());
+//        myUserService.refreshRating(comment.getTrader().getId());
         return comment;
     }
 
