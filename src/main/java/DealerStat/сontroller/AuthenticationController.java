@@ -13,7 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -21,8 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/v1/auth/")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
@@ -31,28 +29,30 @@ public class AuthenticationRestControllerV1 {
     private final MyUserService userService;
 
     @Autowired
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, MyUserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, MyUserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-            MyUser user = userService.findByUsername(username);
+            MyUser user = userService.findMyUserByEmail(username);
 
             if (user == null) {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }
 
-            String token = jwtTokenProvider.createToken(username, user.getRoles());
+            String token = jwtTokenProvider.createToken(username, user.getId(), user.getRoles());
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
             response.put("token", token);
+
+
 
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {

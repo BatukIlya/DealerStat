@@ -8,63 +8,42 @@ import DealerStat.repository.CommentRepository;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
-//@RequiredArgsConstructor
-public class MyUserService{
+@RequiredArgsConstructor
+public class MyUserService {
 
     private final MyUserRepository myUserRepository;
 
-//    private final CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    public MyUserService(MyUserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.myUserRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+
+    public MyUser registerUser(MyUserDto myUserDto) {
+        if (myUserRepository.findMyUserByEmail(myUserDto.getEmail()) == null) {
+            MyUser myUser = new MyUser();
+            myUser.setFirstName(myUserDto.getFirstName());
+            myUser.setLastName(myUserDto.getLastName());
+            myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
+            myUser.setEmail(myUserDto.getEmail());
+            myUser.setRoles(Collections.singletonList(Role.USER));
+            return myUserRepository.save(myUser);
+        } else {
+            log.info("User with this email already exists");
+            return null;
+        }
     }
 
 
-    public MyUser register(MyUser user) {
-//        Role roleUser = roleRepository.findByName("ROLE_USER");
-//        List<Role> userRoles = new ArrayList<>();
-//        userRoles.add(roleUser);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList(Role.USER));
-
-
-        MyUser registeredUser = myUserRepository.save(user);
-
-        log.info("IN register - user: {} successfully registered", registeredUser);
-
-        return registeredUser;
-    }
-
-
-    public List<MyUser> getAll() {
-        List<MyUser> result = myUserRepository.findAll();
-        log.info("IN getAll - {} users found", result.size());
-        return result;
-    }
-
-
-    public MyUser findByUsername(String username) {
+    public MyUser findMyUserByEmail(String username) {
         MyUser result = myUserRepository.findMyUserByEmail(username);
-        log.info("IN findByUsername - user: {} found by username: {}", result, username);
         return result;
     }
 
@@ -86,49 +65,14 @@ public class MyUserService{
         myUserRepository.deleteById(id);
         log.info("IN delete - user with id: {} successfully deleted");
     }
+
+
+    public MyUser refreshRating(Long id) {
+        Double ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).stream().mapToDouble(Comment::getRating)
+                .average().orElse(0);
+        MyUser myUser = myUserRepository.findMyUserById(id);
+        myUser.setRating(ratingTrader);
+        return myUserRepository.save(myUser);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-//    public MyUser createUser(MyUserDto myUserDto) {
-//        if (myUserRepository.findMyUserByEmail(myUserDto.getEmail()) == null) {
-//            MyUser myUser = new MyUser();
-//            myUser.setFirstName(myUserDto.getFirstName());
-//            myUser.setLastName(myUserDto.getLastName());
-//            myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
-//            myUser.setEmail(myUserDto.getEmail());
-//            myUser.setRoles(Collections.singleton(Role.USER));
-//            return myUserRepository.save(myUser);
-//        }else{
-//            throw new RuntimeException("Duplicate user");
-//        }
-//    }
-//
-//
-//
-//    public Long getIdAuthorizedUser() {
-//        MyUser myUser = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return myUser.getId();
-//    }
-//
-//    public boolean checkRole(Role role) {
-//        Set<Role> roles = Collections.singleton(role);
-//        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().equals(roles.toString());
-//
-//    }
-//
-//    public MyUser refreshRating(Long id){
-//        Double ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).stream().mapToDouble(Comment::getRating)
-//                .average().orElse(0);
-//        MyUser myUser = myUserRepository.findMyUserById(id);
-//        myUser.setRating(ratingTrader);
-//        return myUserRepository.save(myUser);
-//    }
 
