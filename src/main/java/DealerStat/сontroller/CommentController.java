@@ -30,7 +30,7 @@ public class CommentController {
         return commentService.createCommentAndTrader(commentDto, myUserDto, request);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority()")
     @GetMapping("/comment/{commentId}")
     public Comment showComment(@PathVariable Long commentId) {
         return commentService.showComment(commentId);

@@ -26,6 +26,8 @@ public class CommentService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+
+
     public Comment createComment(CommentDto commentDto, Long traderId, HttpServletRequest request) {
         if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
             Comment comment = new Comment();
@@ -42,7 +44,7 @@ public class CommentService {
 
     public Comment createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request) {
         if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
-            myUserService.registerUser(myUserDto);
+//            myUserService.registerUser(myUserDto);
             MyUser myUser = myUserRepository.findMyUserByEmail(myUserDto.getEmail());
             return createComment(commentDto, myUser.getId(), request);
         } else {
@@ -67,7 +69,7 @@ public class CommentService {
             commentRepository.save(comment);
             myUserService.refreshRating(comment.getId());
             return comment;
-        }else {
+        } else {
             throw new RuntimeException("Rating should be >0 and <5");
         }
     }

@@ -23,28 +23,9 @@ public class MyUserService {
 
     private final CommentRepository commentRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder;
-
-
-    public MyUser registerUser(MyUserDto myUserDto) {
-        if (myUserRepository.findMyUserByEmail(myUserDto.getEmail()) == null) {
-            MyUser myUser = new MyUser();
-            myUser.setFirstName(myUserDto.getFirstName());
-            myUser.setLastName(myUserDto.getLastName());
-            myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
-            myUser.setEmail(myUserDto.getEmail());
-            myUser.setRoles(Collections.singletonList(Role.USER));
-            return myUserRepository.save(myUser);
-        } else {
-            log.info("User with this email already exists");
-            return null;
-        }
-    }
-
 
     public MyUser findMyUserByEmail(String username) {
-        MyUser result = myUserRepository.findMyUserByEmail(username);
-        return result;
+        return myUserRepository.findMyUserByEmail(username);
     }
 
 
@@ -64,6 +45,10 @@ public class MyUserService {
     public void delete(Long id) {
         myUserRepository.deleteById(id);
         log.info("IN delete - user with id: {} successfully deleted");
+    }
+
+    public MyUser save(MyUser myUser){
+        return myUserRepository.save(myUser);
     }
 
 
