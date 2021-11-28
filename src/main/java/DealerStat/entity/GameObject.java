@@ -1,11 +1,14 @@
 package DealerStat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class GameObject {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +28,12 @@ public class GameObject {
     @ManyToOne
     private MyUser author;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private Date createdAt;
 
-    private LocalDateTime updatedAt;
+    @UpdateTimestamp
+    private Date updatedAt;
 
     @ManyToOne
     private Game game;
-
 }
