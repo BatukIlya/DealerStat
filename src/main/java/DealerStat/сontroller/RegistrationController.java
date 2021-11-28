@@ -20,7 +20,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/confirm-account")
-    public MyUser confirmAccount(@RequestParam("token") String token){
+    public String confirmAccount(@RequestParam("token") String token){
         return registrationService.confirmAccount(token);
     }
 }
