@@ -30,25 +30,24 @@ public class AuthenticationService {
 
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
-            String username = requestDto.getUsername().toLowerCase(Locale.ROOT);
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-            MyUser user = userService.findMyUserByEmail(username);
+            String email = requestDto.getEmail().toLowerCase(Locale.ROOT);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+            MyUser user = userService.findMyUserByEmail(email);
 
             if (user == null) {
-                throw new UsernameNotFoundException("User with username: " + username + " not found");
+                return ResponseEntity.status(404).body("User with email " + email + " not found");
             }
 
-            String token = jwtTokenProvider.createToken(username, user.getId(), user.getRoles());
+            String token = jwtTokenProvider.createToken(email, user.getId(), user.getRoles());
 
             Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
+            response.put("username", email);
             response.put("token", token);
-
-
 
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            return ResponseEntity.status(404).body("Invalid email or password");
         }
     }
+
 }

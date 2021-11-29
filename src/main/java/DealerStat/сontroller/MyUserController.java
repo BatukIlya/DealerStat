@@ -1,13 +1,14 @@
 package DealerStat.сontroller;
 
-import DealerStat.dto.MyUserDto;
 import DealerStat.entity.MyUser;
-import DealerStat.repository.MyUserRepository;
 import DealerStat.service.MyUserService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 
 @RestController
@@ -15,23 +16,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MyUserController {
 
+
     private final MyUserService myUserService;
 
-    private final MyUserRepository myUserRepository;
-
-
-    @GetMapping("/registration")
-    public String registration()
-    {
-        return "registration ";
+    @GetMapping("/users/filter_by_desc_rating")
+    public ResponseEntity showAllTradersByDescRating() {
+        return myUserService.showAllTradersByDescRating();
     }
 
-//    @PostMapping("/registration")
-//    public MyUser createUser(@RequestBody MyUserDto myUserDto) {
-//        return myUserService.createUser(myUserDto);
-//    }
-
+    @GetMapping("/users/filter_by_asc_rating")
+    public ResponseEntity showAllTradersByAscRating(){
+        return myUserService.showAllTradersByAscRating();
     }
+
+    @GetMapping("/users/filter_by_game")
+    public ResponseEntity showAllTradersByGame(String name){
+        return myUserService.showAllTradersByGame(name);
+    }
+
+
+}
 
 
 

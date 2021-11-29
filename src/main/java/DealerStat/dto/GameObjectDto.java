@@ -14,4 +14,6 @@ public class GameObjectDto {
 
     private String text;
 
+    private GameDto game;
+
 }

@@ -4,18 +4,16 @@ import DealerStat.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Comment findCommentByIdAndIsApprovedTrue(Long id);
+    Optional<Comment> findCommentByIdAndIsApprovedTrue(Long id);
 
-    List<Comment> findAllByIsApprovedIsFalse();
+    Optional<List<Comment>> findAllByIsApprovedIsFalse();
 
-    Comment findCommentById(Long id);
+    Optional<Comment> findCommentById(Long id);
 
-    List<Comment> findAllByIsApprovedIsTrue();
-
-    List<Comment> findAllByTraderIdAndIsApprovedIsTrue(Long id);
+    Optional<List<Comment>> findAllByTraderIdAndIsApprovedIsTrue(Long id);
 
 
 }

@@ -1,18 +1,20 @@
 package DealerStat.service;
 
-import DealerStat.dto.MyUserDto;
 import DealerStat.entity.Comment;
+import DealerStat.entity.GameObject;
 import DealerStat.entity.MyUser;
-import DealerStat.entity.Role;
 import DealerStat.repository.CommentRepository;
+import DealerStat.repository.GameObjectRepository;
+import DealerStat.repository.GameRepository;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,41 +25,71 @@ public class MyUserService {
 
     private final CommentRepository commentRepository;
 
+    private final GameObjectRepository gameObjectRepository;
+
+    private final GameRepository gameRepository;
+
 
     public MyUser findMyUserByEmail(String username) {
-        return myUserRepository.findMyUserByEmail(username);
+        return myUserRepository.findMyUserByEmailAndIsApprovedTrue(username).orElse(null);
     }
 
+
+    public MyUser findMyUserById(Long id) {
+        return myUserRepository.findMyUserByIdAndIsApprovedTrue(id).orElse(null);
+    }
 
     public MyUser findById(Long id) {
-        MyUser result = myUserRepository.findById(id).orElse(null);
+        return myUserRepository.findById(id).get();
+    }
 
-        if (result == null) {
-            log.warn("IN findById - no user found by id: {}", id);
-            return null;
+
+    public MyUser save(MyUser myUser) {
+        return myUserRepository.save(myUser);
+    }
+
+    public ResponseEntity showAllTradersByDescRating() {
+        if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
+            List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
+            myUsers.sort(Comparator.comparing(MyUser::getRating));
+            return ResponseEntity.ok(myUsers);
+        } else {
+            return ResponseEntity.status(404).body("Users not found");
         }
 
-        log.info("IN findById - user: {} found by id: {}", result);
-        return result;
+    }
+
+    public ResponseEntity showAllTradersByAscRating() {
+        if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
+            List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
+            myUsers.sort(Comparator.comparing(MyUser::getRating, Comparator.reverseOrder()));
+            return ResponseEntity.ok(myUsers);
+        } else {
+            return ResponseEntity.status(404).body("Users not found");
+        }
+
+    }
+
+    public ResponseEntity showAllTradersByGame(String name) {
+        Long id = gameRepository.findGameByName(name).get().getId();
+        if(gameObjectRepository.findAllByGameId(id).isPresent()){
+            List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(id).get();
+            List<MyUser> myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
+            return ResponseEntity.ok(myUsers);
+        }else{
+            return ResponseEntity.status(404).body("No one users have been found for this game");
+        }
+
     }
 
 
-    public void delete(Long id) {
-        myUserRepository.deleteById(id);
-        log.info("IN delete - user with id: {} successfully deleted");
-    }
-
-    public MyUser save(MyUser myUser){
-        return myUserRepository.save(myUser);
-    }
-
-
-    public MyUser refreshRating(Long id) {
-        Double ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).stream().mapToDouble(Comment::getRating)
+    public void refreshRating(Long id) {
+        Double ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).get().stream().mapToDouble(Comment::getRating)
                 .average().orElse(0);
-        MyUser myUser = myUserRepository.findMyUserById(id);
+        MyUser myUser = myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get();
         myUser.setRating(ratingTrader);
-        return myUserRepository.save(myUser);
+        myUserRepository.save(myUser);
+
     }
 }
 
