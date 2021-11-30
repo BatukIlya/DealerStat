@@ -6,6 +6,7 @@ import dealerstat.service.GameService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +18,9 @@ public class GameController {
 
     private final GameService gameService;
 
-//    @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PostMapping("/games")
-    public Game createGame(@RequestBody GameDto gameDto) {
+    public ResponseEntity createGame(@RequestBody GameDto gameDto) {
         return gameService.createGame(gameDto);
     }
 
@@ -28,7 +29,7 @@ public class GameController {
         return gameService.showAllGames();
     }
 
-//    @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PutMapping("/games/{gameId}")
     public ResponseEntity updateGame(@RequestBody GameDto gameDto, @PathVariable Long gameId) {
         return gameService.updateGame(gameDto, gameId);

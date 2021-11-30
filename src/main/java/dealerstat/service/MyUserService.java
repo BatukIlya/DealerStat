@@ -40,12 +40,12 @@ public class MyUserService {
     }
 
     public MyUser findById(Long id) {
-        return myUserRepository.findById(id).get();
+        return myUserRepository.findById(id).orElse(null);
     }
 
 
-    public MyUser save(MyUser myUser) {
-        return myUserRepository.save(myUser);
+    public void save(MyUser myUser) {
+        myUserRepository.save(myUser);
     }
 
     public ResponseEntity showAllTradersByDescRating() {
@@ -71,12 +71,18 @@ public class MyUserService {
     }
 
     public ResponseEntity showAllTradersByGame(String name) {
-        Long id = gameRepository.findGameByName(name).get().getId();
-        if(gameObjectRepository.findAllByGameId(id).isPresent()){
+        long id;
+        if (gameRepository.findGameByName(name).isPresent()) {
+            id = gameRepository.findGameByName(name).get().getId();
+        } else {
+            return ResponseEntity.status(404).body("Game not found");
+        }
+
+        if (gameObjectRepository.findAllByGameId(id).isPresent()) {
             List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(id).get();
             List<MyUser> myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
             return ResponseEntity.ok(myUsers);
-        }else{
+        } else {
             return ResponseEntity.status(404).body("No one users have been found for this game");
         }
 
@@ -84,17 +90,19 @@ public class MyUserService {
 
 
     public void refreshRating(Long id) {
-        Double ratingTrader;
-        if(commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).isPresent()){
+        double ratingTrader;
+        if (commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).isPresent()) {
             ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).get().stream().mapToDouble(Comment::getRating)
                     .average().orElse(0);
-        }else {
+        } else {
             ratingTrader = 0.0;
         }
 
-        MyUser myUser = myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get();
-        myUser.setRating(ratingTrader);
-        myUserRepository.save(myUser);
+        if (myUserRepository.findMyUserByIdAndIsApprovedTrue(id).isPresent()) {
+            MyUser myUser = myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get();
+            myUser.setRating(ratingTrader);
+            myUserRepository.save(myUser);
+        }
 
     }
 }

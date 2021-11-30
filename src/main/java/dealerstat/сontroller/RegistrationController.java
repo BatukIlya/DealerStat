@@ -4,6 +4,7 @@ import dealerstat.dto.MyUserDto;
 import dealerstat.entity.MyUser;
 import dealerstat.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,23 +15,22 @@ public class RegistrationController {
 
 
     @PostMapping("/register")
-    public MyUser registration(@RequestBody MyUserDto myUserDto) {
+    public ResponseEntity registration(@RequestBody MyUserDto myUserDto) {
         return registrationService.registerUser(myUserDto);
     }
 
-//    @PreAuthorize("permitAll()")
     @PostMapping("/set_password")
-    public String sendMessageForSetPassword(String email) {
+    public ResponseEntity sendMessageForSetPassword(String email) {
         return registrationService.sendMessageForSetPassword(email);
     }
 
-    @PutMapping("/confirm-account")
-    public String setPassword(@RequestParam("token") String token, @RequestBody String password) {
+    @PutMapping("/set_password")
+    public ResponseEntity setPassword(@RequestParam("token") String token, @RequestBody String password) {
         return registrationService.setPassword(password, token);
     }
 
-    @GetMapping("/confirm-account")
-    public String confirmAccount(@RequestParam("token") String token) {
+    @GetMapping("/confirm_account")
+    public ResponseEntity confirmAccount(@RequestParam("token") String token) {
         return registrationService.confirmAccount(token);
     }
 }

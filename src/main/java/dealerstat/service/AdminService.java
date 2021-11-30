@@ -21,9 +21,9 @@ public class AdminService {
     private final MyUserService myUserService;
 
     public ResponseEntity findUsersRegistrationRequest() {
-        if(myUserRepository.findAllByIsApprovedIsFalse().isPresent()){
+        if (myUserRepository.findAllByIsApprovedIsFalse().isPresent()) {
             return ResponseEntity.ok(myUserRepository.findAllByIsApprovedIsFalse().get());
-        }else {
+        } else {
             return ResponseEntity.status(204).body("Request list is empty");
         }
     }
@@ -34,7 +34,7 @@ public class AdminService {
             myUser.setApproved(true);
             myUserService.save(myUser);
             return ResponseEntity.ok("User successfully approved");
-        }else{
+        } else {
             return ResponseEntity.badRequest().body("User not found");
         }
 
@@ -54,9 +54,9 @@ public class AdminService {
     }
 
     public ResponseEntity findCommentsRequest() {
-        if(commentRepository.findAllByIsApprovedIsFalse().isPresent()){
+        if (commentRepository.findAllByIsApprovedIsFalse().isPresent()) {
             return ResponseEntity.ok(commentRepository.findAllByIsApprovedIsFalse().get());
-        }else{
+        } else {
             return ResponseEntity.status(204).body("Request list is empty");
         }
 

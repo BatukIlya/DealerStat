@@ -41,8 +41,8 @@ public class CommentController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @DeleteMapping("/comment/delete/{commentId}")
-    public void deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
-        commentService.deleteComment(commentId, request);
+    public ResponseEntity deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
+        return commentService.deleteComment(commentId, request);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")

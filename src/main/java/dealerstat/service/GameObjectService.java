@@ -34,23 +34,29 @@ public class GameObjectService {
         return gameObjectRepository.save(gameObject);
     }
 
-    public ResponseEntity updateGameObject(GameObjectDto gameObjectDto, Long id){
-        if(gameObjectRepository.findGameObjectById(id).isPresent()){
-            GameObject gameObject  = gameObjectRepository.findGameObjectById(id).get();
-            gameObject.setName(gameObjectDto.getName());
-            gameObject.setText(gameObjectDto.getText());
-            return ResponseEntity.ok("Game object successfully created");
-        }else{
+    public ResponseEntity updateGameObject(GameObjectDto gameObjectDto, Long id, HttpServletRequest request) {
+
+        if (gameObjectRepository.findGameObjectById(id).isPresent()) {
+            GameObject gameObject = gameObjectRepository.findGameObjectById(id).get();
+            if (jwtTokenProvider.getId(request).equals(gameObject.getAuthor().getId())) {
+                gameObject.setName(gameObjectDto.getName());
+                gameObject.setText(gameObjectDto.getText());
+                return ResponseEntity.ok("Game object successfully created");
+            } else {
+                return ResponseEntity.status(403).body("Access denied");
+            }
+
+        }else {
             return ResponseEntity.badRequest().body("Game object not found");
         }
 
     }
 
-    public void deleteGameObject(Long id){
+    public void deleteGameObject(Long id) {
         gameObjectRepository.deleteById(id);
     }
 
-    public List<GameObject> showAll(){
+    public List<GameObject> showAll() {
         return gameObjectRepository.findAll();
     }
 }

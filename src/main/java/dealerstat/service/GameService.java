@@ -15,10 +15,16 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    public Game createGame(GameDto gameDto) {
-        Game game = new Game();
-        game.setName(gameDto.getName());
-        return gameRepository.save(game);
+    public ResponseEntity createGame(GameDto gameDto) {
+        if(gameRepository.findGameByName(gameDto.getName()).isEmpty()){
+            Game game = new Game();
+            game.setName(gameDto.getName());
+            gameRepository.save(game);
+            return ResponseEntity.ok(game);
+        }else{
+            return ResponseEntity.status(404).body("This game already exist");
+        }
+
     }
 
     public List<Game> showAllGames(){
