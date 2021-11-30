@@ -5,40 +5,61 @@ import DealerStat.entity.MyUser;
 import DealerStat.repository.CommentRepository;
 import DealerStat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final MyUserRepository myUserRepository;
 
     private final CommentRepository commentRepository;
 
+    private final MyUserRepository myUserRepository;
+
     private final MyUserService myUserService;
 
-    public List<MyUser> findUsersRegistrationRequest(){
-        return myUserRepository.findAllByIsApprovedEmailTrueAndIsApprovedIsFalse();
+    public ResponseEntity findUsersRegistrationRequest() {
+        if(myUserRepository.findAllByIsApprovedIsFalse().isPresent()){
+            return ResponseEntity.ok(myUserRepository.findAllByIsApprovedIsFalse().get());
+        }else {
+            return ResponseEntity.status(204).body("Request list is empty");
+        }
     }
 
-    public MyUser approveUser(Long id){
-        MyUser myUser = myUserRepository.findMyUserById(id);
-        myUser.setApproved(true);
-        return myUserRepository.save(myUser);
+    public ResponseEntity approveUser(Long id) {
+        if (myUserRepository.findById(id).isPresent()) {
+            MyUser myUser = myUserRepository.findById(id).get();
+            myUser.setApproved(true);
+            myUserService.save(myUser);
+            return ResponseEntity.ok("User successfully approved");
+        }else{
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+
     }
 
-    public Comment approveComment(Long id) {
-        Comment comment = commentRepository.findCommentById(id);
-        comment.setApproved(true);
-        commentRepository.save(comment);
-        myUserService.refreshRating(comment.getTrader().getId());
-        return comment;
+    public ResponseEntity approveComment(Long id) {
+        if (commentRepository.findCommentById(id).isPresent()) {
+            Comment comment = commentRepository.findCommentById(id).get();
+            comment.setApproved(true);
+            commentRepository.save(comment);
+            myUserService.refreshRating(comment.getTrader().getId());
+            return ResponseEntity.ok("Comment successfully approved");
+        } else {
+            return ResponseEntity.badRequest().body("Comment not found");
+        }
     }
 
-    public List<Comment> findCommentsRequest(){
-        return commentRepository.findAllByIsApprovedIsFalse();
+    public ResponseEntity findCommentsRequest() {
+        if(commentRepository.findAllByIsApprovedIsFalse().isPresent()){
+            return ResponseEntity.ok(commentRepository.findAllByIsApprovedIsFalse().get());
+        }else{
+            return ResponseEntity.status(204).body("Request list is empty");
+        }
+
     }
 
 }

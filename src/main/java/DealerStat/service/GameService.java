@@ -4,6 +4,7 @@ import DealerStat.dto.GameDto;
 import DealerStat.entity.Game;
 import DealerStat.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +25,15 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public Game updateGame(GameDto gameDto, Long id){
-        Game game = gameRepository.findGameById(id);
-        game.setName(gameDto.getName());
-        return gameRepository.save(game);
+    public ResponseEntity updateGame(GameDto gameDto, Long id){
+        if(gameRepository.findGameById(id).isPresent()){
+            Game game = gameRepository.findGameById(id).get();
+            game.setName(gameDto.getName());
+            gameRepository.save(game);
+            return ResponseEntity.ok("Game successfully updated");
+        }else{
+            return ResponseEntity.status(404).body("Game not found");
+        }
+
     }
 }

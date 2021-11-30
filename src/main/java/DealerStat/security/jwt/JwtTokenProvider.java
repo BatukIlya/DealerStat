@@ -19,13 +19,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Util class that provides methods for generation, validation, etc. of JWT token.
- *
- * @author Eugene Suleimanov
- * @version 1.0
- */
-
 @Component
 public class JwtTokenProvider {
 
@@ -73,17 +66,25 @@ public class JwtTokenProvider {
     }
 
     public Long getId(HttpServletRequest req) {
-        Number id = (Number) this.getClaims(req).get("id");
-        return id.longValue();
+        if(this.getClaims(req) != null){
+            Number id = (Number) this.getClaims(req).get("id");
+            return id.longValue();
+        }else{
+            return 0L;
+        }
     }
 
     public List getRole(HttpServletRequest req) {
         return (List) this.getClaims(req).get("roles");
     }
 
-    private Claims getClaims(HttpServletRequest req){
+    private Claims getClaims(HttpServletRequest req) {
         String token = this.resolveToken(req);
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        if (token != null) {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        }else {
+            return null;
+        }
     }
 
     public String getUsername(String token) {
