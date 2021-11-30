@@ -28,13 +28,13 @@ public class GameObjectService {
     public GameObject createGameObject(GameObjectDto gameObjectDto, HttpServletRequest request) {
         GameObject gameObject = new GameObject();
         gameObject.setName(gameObjectDto.getName());
-        gameObject.setAuthor(myUserService.findMyUserById(jwtTokenProvider.getId(request)));
+        gameObject.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
         gameObject.setText(gameObjectDto.getText());
         gameObject.setGame(gameRepository.findGameByName(gameObjectDto.getGame().getName()).get());
         return gameObjectRepository.save(gameObject);
     }
 
-    public ResponseEntity updateGameObject(GameObjectDto gameObjectDto, Long id, HttpServletRequest request) {
+    public ResponseEntity<?> updateGameObject(GameObjectDto gameObjectDto, Long id, HttpServletRequest request) {
 
         if (gameObjectRepository.findGameObjectById(id).isPresent()) {
             GameObject gameObject = gameObjectRepository.findGameObjectById(id).get();

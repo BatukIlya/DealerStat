@@ -20,7 +20,7 @@ public class GameController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PostMapping("/games")
-    public ResponseEntity createGame(@RequestBody GameDto gameDto) {
+    public ResponseEntity<?> createGame(@RequestBody GameDto gameDto) {
         return gameService.createGame(gameDto);
     }
 
@@ -31,7 +31,7 @@ public class GameController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PutMapping("/games/{gameId}")
-    public ResponseEntity updateGame(@RequestBody GameDto gameDto, @PathVariable Long gameId) {
+    public ResponseEntity<?> updateGame(@RequestBody GameDto gameDto, @PathVariable Long gameId) {
         return gameService.updateGame(gameDto, gameId);
     }
 }

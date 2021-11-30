@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.*;
 @Api
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
-@RequestMapping("/admin")
+@RequestMapping("/admin/")
 public class AdminController {
 
     private final AdminService adminService;
 
     @GetMapping("/registration_request/")
-    public ResponseEntity showUsersRegistrationRequest(){
+    public ResponseEntity<?> showUsersRegistrationRequest(){
        return adminService.findUsersRegistrationRequest();
     }
 
     @PutMapping("/registration_request/{id}")
-    public ResponseEntity approveUser(@PathVariable Long id){
+    public ResponseEntity<?> approveUser(@PathVariable Long id){
         return adminService.approveUser(id);
     }
 
     @GetMapping("/comment_request")
-    public ResponseEntity showCommentRequest(){
+    public ResponseEntity<?> showCommentRequest(){
         return adminService.findCommentsRequest();
     }
 
     @PutMapping("/comment_request/{commentId}/")
-    public ResponseEntity approveComment(@PathVariable Long commentId) {
+    public ResponseEntity<?> approveComment(@PathVariable Long commentId) {
         return adminService.approveComment(commentId);
     }
 }

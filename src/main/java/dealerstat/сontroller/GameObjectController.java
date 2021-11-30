@@ -27,7 +27,7 @@ public class GameObjectController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
     @PutMapping("/{gameObjectId}/updateGameObject")
-  public ResponseEntity updateGameObject(@RequestBody GameObjectDto gameObjectDto, @PathVariable Long gameObjectId,
+  public ResponseEntity<?> updateGameObject(@RequestBody GameObjectDto gameObjectDto, @PathVariable Long gameObjectId,
                                          HttpServletRequest request){
         return gameObjectService.updateGameObject(gameObjectDto, gameObjectId, request);
     }

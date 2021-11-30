@@ -15,7 +15,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    public ResponseEntity createGame(GameDto gameDto) {
+    public ResponseEntity<?> createGame(GameDto gameDto) {
         if(gameRepository.findGameByName(gameDto.getName()).isEmpty()){
             Game game = new Game();
             game.setName(gameDto.getName());
@@ -31,7 +31,7 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public ResponseEntity updateGame(GameDto gameDto, Long id){
+    public ResponseEntity<?> updateGame(GameDto gameDto, Long id){
         if(gameRepository.findGameById(id).isPresent()){
             Game game = gameRepository.findGameById(id).get();
             game.setName(gameDto.getName());

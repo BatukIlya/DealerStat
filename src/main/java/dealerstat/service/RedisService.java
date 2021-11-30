@@ -12,7 +12,7 @@ public class RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private final ValueOperations valueOperations;
+    private final ValueOperations<String, Object> valueOperations;
 
     @Value("${redis.token.expired}")
     private long validityInMilliseconds;
@@ -23,15 +23,15 @@ public class RedisService {
     }
 
 
-    public void putToken(String token, Object object){
+    public void putToken(String token, Object object) {
         valueOperations.set(token, object, validityInMilliseconds, TimeUnit.MILLISECONDS);
     }
 
-    public Object getToken(String token){
+    public Object getToken(String token) {
         return valueOperations.get(token);
     }
 
-    public void deleteToken(String token){
+    public void deleteToken(String token) {
         redisTemplate.delete(token);
     }
 }

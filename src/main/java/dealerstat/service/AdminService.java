@@ -20,7 +20,7 @@ public class AdminService {
 
     private final MyUserService myUserService;
 
-    public ResponseEntity findUsersRegistrationRequest() {
+    public ResponseEntity<?> findUsersRegistrationRequest() {
         if (myUserRepository.findAllByIsApprovedIsFalse().isPresent()) {
             return ResponseEntity.ok(myUserRepository.findAllByIsApprovedIsFalse().get());
         } else {
@@ -28,7 +28,7 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity approveUser(Long id) {
+    public ResponseEntity<?> approveUser(Long id) {
         if (myUserRepository.findById(id).isPresent()) {
             MyUser myUser = myUserRepository.findById(id).get();
             myUser.setApproved(true);
@@ -41,7 +41,7 @@ public class AdminService {
 
     }
 
-    public ResponseEntity approveComment(Long id) {
+    public ResponseEntity<?> approveComment(Long id) {
         if (commentRepository.findCommentById(id).isPresent()) {
             Comment comment = commentRepository.findCommentById(id).get();
             comment.setApproved(true);
@@ -53,7 +53,7 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity findCommentsRequest() {
+    public ResponseEntity<?> findCommentsRequest() {
         if (commentRepository.findAllByIsApprovedIsFalse().isPresent()) {
             return ResponseEntity.ok(commentRepository.findAllByIsApprovedIsFalse().get());
         } else {

@@ -34,7 +34,6 @@ public class MyUserService {
         return myUserRepository.findMyUserByEmail(username).orElse(null);
     }
 
-
     public MyUser findMyUserById(Long id) {
         return myUserRepository.findMyUserByIdAndIsApprovedTrue(id).orElse(null);
     }
@@ -43,12 +42,20 @@ public class MyUserService {
         return myUserRepository.findById(id).orElse(null);
     }
 
-
     public void save(MyUser myUser) {
         myUserRepository.save(myUser);
     }
 
-    public ResponseEntity showAllTradersByDescRating() {
+    public ResponseEntity<?> showAllTraders(){
+        if(myUserRepository.findAllByIsApprovedIsTrue().isPresent()){
+            List<MyUser> traders = myUserRepository.findAllByIsApprovedIsTrue().get();
+            return ResponseEntity.ok(traders);
+        }else{
+            return ResponseEntity.status(404).body("Traders not found");
+        }
+    }
+
+    public ResponseEntity<?> showAllTradersByDescRating() {
         if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
             List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
             myUsers.sort(Comparator.comparing(MyUser::getRating));
@@ -59,7 +66,7 @@ public class MyUserService {
 
     }
 
-    public ResponseEntity showAllTradersByAscRating() {
+    public ResponseEntity<?> showAllTradersByAscRating() {
         if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
             List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
             myUsers.sort(Comparator.comparing(MyUser::getRating, Comparator.reverseOrder()));
@@ -70,7 +77,7 @@ public class MyUserService {
 
     }
 
-    public ResponseEntity showAllTradersByGame(String name) {
+    public ResponseEntity<?> showAllTradersByGame(String name) {
         long id;
         if (gameRepository.findGameByName(name).isPresent()) {
             id = gameRepository.findGameByName(name).get().getId();
@@ -92,8 +99,8 @@ public class MyUserService {
     public void refreshRating(Long id) {
         double ratingTrader;
         if (commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).isPresent()) {
-            ratingTrader = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).get().stream().mapToDouble(Comment::getRating)
-                    .average().orElse(0);
+            List<Comment> comments = commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).get();
+            ratingTrader = comments.stream().mapToDouble(Comment::getRating).average().orElse(0);
         } else {
             ratingTrader = 0.0;
         }
