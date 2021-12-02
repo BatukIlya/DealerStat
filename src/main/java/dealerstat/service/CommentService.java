@@ -25,34 +25,28 @@ public class CommentService {
 
 
     public ResponseEntity<?> createComment(CommentDto commentDto, Long traderId, HttpServletRequest request) {
-        if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
-            Comment comment = new Comment();
-            comment.setMessage(commentDto.getMessage());
-            comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
+        Comment comment = new Comment();
+        comment.setMessage(commentDto.getMessage());
+        comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
 
-            if(myUserService.findMyUserById(traderId) != null){
-                comment.setTrader(myUserService.findMyUserById(traderId));
-            }else{
-                return ResponseEntity.status(404).body("Trader not found");
-            }
-
-            comment.setRating(commentDto.getRating());
-            commentRepository.save(comment);
-            return ResponseEntity.status(201).body("Comment successfully created.");
+        if (myUserService.findMyUserById(traderId) != null) {
+            comment.setTrader(myUserService.findMyUserById(traderId));
         } else {
-            return ResponseEntity.badRequest().body("Rating should be >0 and <5");
+            return ResponseEntity.status(404).body("Trader not found");
         }
+
+        comment.setRating(commentDto.getRating());
+        commentRepository.save(comment);
+        return ResponseEntity.status(201).body("Comment successfully created.");
+
 
     }
 
     public ResponseEntity<?> createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request) {
-        if (commentDto.getRating() <= 5.0 && commentDto.getRating() >= 0) {
 //            myUserService.registerUser(myUserDto);
-            MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail());
-            return createComment(commentDto, myUser.getId(), request);
-        } else {
-            return ResponseEntity.badRequest().body("Rating must be >0 and <5");
-        }
+        MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail());
+        return createComment(commentDto, myUser.getId(), request);
+
     }
 
 
@@ -66,9 +60,9 @@ public class CommentService {
     }
 
     public ResponseEntity<?> showAll(Long id) {
-        if(commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).isPresent()){
+        if (commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).isPresent()) {
             return ResponseEntity.ok(commentRepository.findAllByTraderIdAndIsApprovedIsTrue(id).get());
-        }else{
+        } else {
             return ResponseEntity.status(404).body("Comments not found");
         }
     }
@@ -107,7 +101,7 @@ public class CommentService {
             } else {
                 return ResponseEntity.status(403).body("Access denied");
             }
-        }else{
+        } else {
             return ResponseEntity.status(404).body("Comment not found");
         }
     }

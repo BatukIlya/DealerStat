@@ -30,7 +30,7 @@ public class GameObjectService {
         gameObject.setName(gameObjectDto.getName());
         gameObject.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
         gameObject.setText(gameObjectDto.getText());
-        gameObject.setGame(gameRepository.findGameByName(gameObjectDto.getGame().getName()).get());
+        gameObject.setGame(gameRepository.findGameById(gameObjectDto.getGame().getId()).get());
         return gameObjectRepository.save(gameObject);
     }
 
@@ -47,13 +47,26 @@ public class GameObjectService {
             }
 
         }else {
-            return ResponseEntity.badRequest().body("Game object not found");
+            return ResponseEntity.status(404).body("Game object not found");
         }
 
     }
 
-    public void deleteGameObject(Long id) {
-        gameObjectRepository.deleteById(id);
+    public ResponseEntity<?> deleteGameObject(Long id, HttpServletRequest request) {
+        if(gameObjectRepository.findGameObjectById(id).isPresent()){
+            GameObject gameObject = gameObjectRepository.findGameObjectById(id).get();
+            if (jwtTokenProvider.getId(request).equals(gameObject.getAuthor().getId())){
+                gameObjectRepository.deleteById(id);
+                return ResponseEntity.ok("Game object is deleted");
+            }else{
+                return ResponseEntity.status(403).body("Access denied");
+            }
+        }else{
+            return ResponseEntity.status(404).body("Game object not found");
+        }
+
+
+
     }
 
     public List<GameObject> showAll() {

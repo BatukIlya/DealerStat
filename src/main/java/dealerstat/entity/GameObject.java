@@ -16,7 +16,6 @@ import java.util.Date;
 @Table(name = "game_objects")
 public class GameObject {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

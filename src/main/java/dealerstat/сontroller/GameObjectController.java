@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class GameObjectController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
     @PostMapping("/object")
-    public GameObject createGameObject(@RequestBody GameObjectDto gameObjectDto, HttpServletRequest request){
+    public GameObject createGameObject(@RequestBody @Valid GameObjectDto gameObjectDto, HttpServletRequest request){
         return gameObjectService.createGameObject(gameObjectDto, request);
     }
 
@@ -39,7 +40,7 @@ public class GameObjectController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @DeleteMapping("/object/{gameObjectId}")
-    public void deleteGameObject(@PathVariable Long gameObjectId){
-        gameObjectService.deleteGameObject(gameObjectId);
+    public ResponseEntity<?> deleteGameObject(@PathVariable Long gameObjectId, HttpServletRequest request){
+        return gameObjectService.deleteGameObject(gameObjectId, request);
     }
 }

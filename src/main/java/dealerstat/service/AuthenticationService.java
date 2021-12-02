@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Service
@@ -40,7 +41,7 @@ public class AuthenticationService {
     @Value("${server.port}")
     private String port;
 
-    public ResponseEntity<?> registerUser(MyUserDto myUserDto) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid MyUserDto myUserDto) {
         String email = (String) redisService.getToken(myUserDto.getEmail());
         System.out.println(email);
         MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail());
@@ -68,7 +69,7 @@ public class AuthenticationService {
         }
     }
 
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto requestDto) {
         try {
             String email = requestDto.getEmail().toLowerCase(Locale.ROOT);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));

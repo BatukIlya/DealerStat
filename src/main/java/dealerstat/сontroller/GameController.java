@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class GameController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PostMapping("/games")
-    public ResponseEntity<?> createGame(@RequestBody GameDto gameDto) {
+    public ResponseEntity<?> createGame(@RequestBody @Valid GameDto gameDto) {
         return gameService.createGame(gameDto);
     }
 

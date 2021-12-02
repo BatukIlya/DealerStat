@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @Api
@@ -20,12 +21,12 @@ public class CommentController {
 
 
     @PostMapping("/users/{traderId}/comments")
-    public ResponseEntity<?> createComment(@RequestBody CommentDto commentDto, @PathVariable Long traderId, HttpServletRequest request) {
+    public ResponseEntity<?> createComment(@RequestBody @Valid CommentDto commentDto, @PathVariable Long traderId, HttpServletRequest request) {
         return commentService.createComment(commentDto, traderId, request);
     }
 
     @PostMapping("/users/create_comment_and_trader")
-    public ResponseEntity<?> createCommentAndTrader(@RequestBody CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request){
+    public ResponseEntity<?> createCommentAndTrader(@RequestBody @Valid CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request){
         return commentService.createCommentAndTrader(commentDto, myUserDto, request);
     }
 
