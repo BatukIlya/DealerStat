@@ -1,0 +1,209 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1.0.3" author="ilya_batuk">
+        <createTable tableName="my_users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="true" unique="true"/>
+            </column>
+
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_approved" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rating" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createTable tableName="comments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="message" type="VARCHAR(500)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_approved" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rating" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="trader_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="comments"
+                                 constraintName="id_author_id_comment"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="my_users"/>
+
+        <addForeignKeyConstraint baseColumnNames="trader_id"
+                                 baseTableName="comments"
+                                 constraintName="id_trader_id_comment"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="my_users"/>
+
+        <createTable tableName="games">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+        </createTable>
+
+        <createTable tableName="game_objects">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="game_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="game_id"
+                                 baseTableName="game_objects"
+                                 constraintName="id_game_id_game_object"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="games"/>
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="game_objects"
+                                 constraintName="id_author_id_game_object"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="my_users"/>
+
+        <createTable tableName="my_user_roles">
+            <column name="my_user_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="roles" type="VARCHAR(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="my_user_id"
+                                 baseTableName="my_user_roles"
+                                 constraintName="id_user_role"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="my_users"/>
+
+        <insert tableName="my_users">
+            <column name="id" autoIncrement="true"/>
+            <column name="email" value="admin"/>
+            <column name="created_at" value="now()"/>
+            <column name="first_name" value="admin"/>
+            <column name="is_approved" value="true"/>
+            <column name="last_name" value="admin"/>
+            <column name="password" value="$2a$10$l0DaqP9q9Jmel9XDvxucvOac0fUNKw0MRNVHb85PjSzB26Ir5kvoy"/>
+            <column name="rating" value="0"/>
+        </insert>
+
+        <insert tableName="my_user_roles">
+            <column name="my_user_id" value="1"/>
+            <column name="roles" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="my_users">
+            <column name="id" value="0"/>
+            <column name="created_at" value="now()"/>
+            <column name="first_name" value="anonim"/>
+            <column name="is_approved" value="true"/>
+            <column name="last_name" value="anonim"/>
+            <column name="password" value="$"/>
+            <column name="rating" value="0"/>
+        </insert>
+
+        <insert tableName="my_user_roles">
+            <column name="my_user_id" value="0"/>
+            <column name="roles" value="ANONIM"/>
+        </insert>
+
+
+    </changeSet>
+
+
+
+</databaseChangeLog>
+
+
+
