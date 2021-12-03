@@ -1,10 +1,11 @@
 <databaseChangeLog
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="1.0.3" author="ilya_batuk">
-        <createTable tableName="my_users">
+        <createTable tableName="my_user">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -39,7 +40,7 @@
 
         </createTable>
 
-        <createTable tableName="comments">
+        <createTable tableName="comment">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -67,7 +68,7 @@
             <column name="author_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            
+
             <column name="trader_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -75,22 +76,22 @@
         </createTable>
 
         <addForeignKeyConstraint baseColumnNames="author_id"
-                                 baseTableName="comments"
+                                 baseTableName="comment"
                                  constraintName="id_author_id_comment"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="my_users"/>
+                                 referencedTableName="my_user"/>
 
         <addForeignKeyConstraint baseColumnNames="trader_id"
-                                 baseTableName="comments"
+                                 baseTableName="comment"
                                  constraintName="id_trader_id_comment"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="my_users"/>
+                                 referencedTableName="my_user"/>
 
-        <createTable tableName="games">
+        <createTable tableName="game">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -101,7 +102,7 @@
 
         </createTable>
 
-        <createTable tableName="game_objects">
+        <createTable tableName="game_object">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -133,20 +134,20 @@
         </createTable>
 
         <addForeignKeyConstraint baseColumnNames="game_id"
-                                 baseTableName="game_objects"
+                                 baseTableName="game_object"
                                  constraintName="id_game_id_game_object"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="games"/>
+                                 referencedTableName="game"/>
 
         <addForeignKeyConstraint baseColumnNames="author_id"
-                                 baseTableName="game_objects"
+                                 baseTableName="game_object"
                                  constraintName="id_author_id_game_object"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="my_users"/>
+                                 referencedTableName="my_user"/>
 
         <createTable tableName="my_user_roles">
             <column name="my_user_id" type="BIGINT" autoIncrement="true">
@@ -165,9 +166,9 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="my_users"/>
+                                 referencedTableName="my_user"/>
 
-        <insert tableName="my_users">
+        <insert tableName="my_user">
             <column name="id" autoIncrement="true"/>
             <column name="email" value="admin"/>
             <column name="created_at" value="now()"/>
@@ -183,7 +184,7 @@
             <column name="roles" value="ADMIN"/>
         </insert>
 
-        <insert tableName="my_users">
+        <insert tableName="my_user">
             <column name="id" value="0"/>
             <column name="created_at" value="now()"/>
             <column name="first_name" value="anonim"/>
@@ -200,7 +201,6 @@
 
 
     </changeSet>
-
 
 
 </databaseChangeLog>

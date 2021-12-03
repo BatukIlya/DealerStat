@@ -37,7 +37,7 @@ public class CommentService {
 
         comment.setRating(commentDto.getRating());
         commentRepository.save(comment);
-        return ResponseEntity.status(201).body("Comment successfully created.");
+        return ResponseEntity.status(201).body(comment);
 
 
     }
@@ -61,7 +61,7 @@ public class CommentService {
         comment.setRating(createCommentAndTraderDto.getRatingComment());
         commentRepository.save(comment);
 
-        return ResponseEntity.ok("Comment and Trader successfully created");
+        return ResponseEntity.ok(comment);
     }
 
 

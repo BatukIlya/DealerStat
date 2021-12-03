@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 public final class JwtUserFactory {
 
     public JwtUserFactory() {
@@ -19,8 +18,6 @@ public final class JwtUserFactory {
     public static JwtUser create(MyUser user) {
         return new JwtUser(
                 user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))

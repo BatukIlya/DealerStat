@@ -7,7 +7,6 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ public class CommentController {
 
 
     @PostMapping("/users/{traderId}/comments")
-    public ResponseEntity<?> createComment(@Valid @RequestBody  CommentDto commentDto, @PathVariable Long traderId,
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentDto commentDto, @PathVariable Long traderId,
                                            HttpServletRequest request) {
         return commentService.createComment(commentDto, traderId, request);
     }

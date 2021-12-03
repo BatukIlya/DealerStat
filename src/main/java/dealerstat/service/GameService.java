@@ -16,28 +16,28 @@ public class GameService {
     private final GameRepository gameRepository;
 
     public ResponseEntity<?> createGame(GameDto gameDto) {
-        if(gameRepository.findGameByName(gameDto.getName()).isEmpty()){
+        if (gameRepository.findGameByNameContainingIgnoreCase(gameDto.getName()).isEmpty()) {
             Game game = new Game();
             game.setName(gameDto.getName());
             gameRepository.save(game);
             return ResponseEntity.ok(game);
-        }else{
+        } else {
             return ResponseEntity.status(404).body("This game already exist");
         }
 
     }
 
-    public List<Game> showAllGames(){
+    public List<Game> showAllGames() {
         return gameRepository.findAll();
     }
 
-    public ResponseEntity<?> updateGame(GameDto gameDto, Long id){
-        if(gameRepository.findGameById(id).isPresent()){
+    public ResponseEntity<?> updateGame(GameDto gameDto, Long id) {
+        if (gameRepository.findGameById(id).isPresent()) {
             Game game = gameRepository.findGameById(id).get();
             game.setName(gameDto.getName());
             gameRepository.save(game);
-            return ResponseEntity.ok("Game successfully updated");
-        }else{
+            return ResponseEntity.ok(game);
+        } else {
             return ResponseEntity.status(404).body("Game not found");
         }
 

@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "game_objects")
 public class GameObject {
 
     @Id

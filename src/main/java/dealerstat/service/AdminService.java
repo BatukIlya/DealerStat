@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminService {
 
-
     private final CommentRepository commentRepository;
 
     private final MyUserRepository myUserRepository;
@@ -38,8 +37,6 @@ public class AdminService {
         } else {
             return ResponseEntity.badRequest().body("User not found");
         }
-
-
     }
 
     public ResponseEntity<?> approveComment(Long id) {
@@ -60,7 +57,6 @@ public class AdminService {
         } else {
             return ResponseEntity.status(204).body("Request list is empty");
         }
-
     }
 
 }

@@ -17,17 +17,17 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/registration_request/")
-    public ResponseEntity<?> showUsersRegistrationRequest(){
-       return adminService.findUsersRegistrationRequest();
+    public ResponseEntity<?> showUsersRegistrationRequest() {
+        return adminService.findUsersRegistrationRequest();
     }
 
     @PutMapping("/registration_request/{id}")
-    public ResponseEntity<?> approveUser(@PathVariable Long id){
+    public ResponseEntity<?> approveUser(@PathVariable Long id) {
         return adminService.approveUser(id);
     }
 
     @GetMapping("/comment_request")
-    public ResponseEntity<?> showCommentRequest(){
+    public ResponseEntity<?> showCommentRequest() {
         return adminService.findCommentsRequest();
     }
 
