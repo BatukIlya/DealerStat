@@ -2,20 +2,17 @@ package dealerstat.service;
 
 import dealerstat.dto.SearchCriteria;
 import dealerstat.entity.Comment;
-import dealerstat.entity.GameObject;
 import dealerstat.entity.MyUser;
 import dealerstat.repository.CommentRepository;
-import dealerstat.repository.GameObjectRepository;
-import dealerstat.repository.GameRepository;
 import dealerstat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,10 +22,6 @@ public class MyUserService {
     private final MyUserRepository myUserRepository;
 
     private final CommentRepository commentRepository;
-
-    private final GameObjectRepository gameObjectRepository;
-
-    private final GameRepository gameRepository;
 
 
     public MyUser findMyUserByEmail(String username) {
@@ -47,53 +40,32 @@ public class MyUserService {
         myUserRepository.save(myUser);
     }
 
-    public ResponseEntity<?> showAllTraders(){
-        if(myUserRepository.findAllByIsApprovedIsTrue().isPresent()){
-            List<MyUser> traders = myUserRepository.findAllByIsApprovedIsTrue().get();
-            return ResponseEntity.ok(traders);
-        }else{
-            return ResponseEntity.status(404).body("Traders not found");
-        }
-    }
+    public ResponseEntity<?> showAllTraders(SearchCriteria searchCriteria) {
+        List<MyUser> myUsers = new ArrayList<>();
 
-    public ResponseEntity<?> showAllTradersByDescRating() {
-        if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
-            List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
+        if (searchCriteria.getGame() != null) {
+            System.out.println(1);
+        } else if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
+            myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
+        } else {
+            return ResponseEntity.status(404).body("Users not found");
+        }
+
+        if (searchCriteria.isSortByAsc()) {
             myUsers.sort(Comparator.comparing(MyUser::getRating));
-            return ResponseEntity.ok(myUsers);
         } else {
-            return ResponseEntity.status(404).body("Users not found");
-        }
-
-    }
-
-    public ResponseEntity<?> showAllTradersByAscRating() {
-        if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
-            List<MyUser> myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
             myUsers.sort(Comparator.comparing(MyUser::getRating, Comparator.reverseOrder()));
-            return ResponseEntity.ok(myUsers);
-        } else {
-            return ResponseEntity.status(404).body("Users not found");
         }
 
-    }
-
-    public ResponseEntity<?> showAllTradersByGame(String name) {
-        long id;
-        if (gameRepository.findGameByName(name).isPresent()) {
-            id = gameRepository.findGameByName(name).get().getId();
-        } else {
-            return ResponseEntity.status(404).body("Game not found");
+        Integer count = searchCriteria.getCount();
+        if (count != null) {
+            if (count > myUsers.size()) {
+                count = myUsers.size();
+            }
+            myUsers.subList(count, myUsers.size()).clear();
         }
 
-        if (gameObjectRepository.findAllByGameId(id).isPresent()) {
-            List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(id).get();
-            List<MyUser> myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
-            return ResponseEntity.ok(myUsers);
-        } else {
-            return ResponseEntity.status(404).body("No one users have been found for this game");
-        }
-
+        return ResponseEntity.ok(myUsers);
     }
 
 
