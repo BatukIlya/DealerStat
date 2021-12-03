@@ -158,7 +158,7 @@ public class AuthenticationService {
         String check = (String) redisService.getToken(token);
 
         if (check != null) {
-            return ResponseEntity.ok(check);
+            return ResponseEntity.ok("The token's lifetime has not expired");
         } else {
             return ResponseEntity.status(404).body("The token's lifetime has expired");
         }

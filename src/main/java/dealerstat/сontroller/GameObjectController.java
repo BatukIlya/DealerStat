@@ -27,10 +27,16 @@ public class GameObjectController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
-    @PutMapping("/{gameObjectId}/updateGameObject")
+    @PutMapping("/object/{gameObjectId}")
     public ResponseEntity<?> updateGameObject(@RequestBody GameObjectDto gameObjectDto, @PathVariable Long gameObjectId,
                                               HttpServletRequest request) {
         return gameObjectService.updateGameObject(gameObjectDto, gameObjectId, request);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
+    @GetMapping("/object/my")
+    public ResponseEntity<?> showMyGameObject(HttpServletRequest request) {
+        return gameObjectService.showMyGameObjects(request);
     }
 
     @GetMapping("/object")

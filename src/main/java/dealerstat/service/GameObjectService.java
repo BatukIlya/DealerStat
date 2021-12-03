@@ -78,4 +78,13 @@ public class GameObjectService {
     public List<GameObject> showAll() {
         return gameObjectRepository.findAll();
     }
+
+    public ResponseEntity<?> showMyGameObjects(HttpServletRequest request) {
+        Long id = jwtTokenProvider.getId(request);
+        if (gameObjectRepository.findAllByAuthorId(id).isPresent()) {
+            return ResponseEntity.ok(gameObjectRepository.findAllByAuthorId(id).get());
+        } else {
+            return ResponseEntity.status(404).body("Game objects not found");
+        }
+    }
 }

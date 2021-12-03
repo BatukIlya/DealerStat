@@ -12,5 +12,7 @@ public interface GameObjectRepository extends JpaRepository<GameObject, Long> {
 
     Optional<List<GameObject>> findAllByGameId(Long id);
 
+    Optional<List<GameObject>> findAllByAuthorId(Long id);
+
 
 }
