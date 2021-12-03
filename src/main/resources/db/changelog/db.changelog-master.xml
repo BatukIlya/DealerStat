@@ -44,7 +44,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="message" type="VARCHAR(255)">
+            <column name="message" type="VARCHAR(500)">
                 <constraints nullable="false" unique="false"/>
             </column>
 
@@ -153,7 +153,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="roles" type="VARCHAR(255)">
+            <column name="roles" type="VARCHAR(100)">
                 <constraints nullable="false" unique="false"/>
             </column>
 

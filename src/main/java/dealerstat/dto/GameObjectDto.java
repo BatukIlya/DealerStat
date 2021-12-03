@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -16,6 +17,7 @@ public class GameObjectDto {
     private String name;
 
     @NotNull
+    @Max(255)
     private String text;
 
     @NotNull

@@ -98,9 +98,9 @@ public class AuthenticationService {
     public ResponseEntity<?> confirmAccount(String token) {
         MyUser myUser = (MyUser) redisService.getToken(token);
         if (myUser != null) {
+            myUserService.save(myUser);
             redisService.deleteToken(myUser.getEmail());
             redisService.deleteToken(token);
-            myUserService.save(myUser);
             return ResponseEntity.ok("Complete registration! Please, wait for admin confirmation");
         } else {
             return ResponseEntity.status(404).body("The token's lifetime has expired");
@@ -125,17 +125,27 @@ public class AuthenticationService {
     public ResponseEntity<?> setPassword(String password, String token) {
         String email = (String) redisService.getToken(token);
         if (email != null) {
-            redisService.deleteToken(token);
             MyUser myUser = myUserService.findMyUserByEmail(email);
             myUser.setPassword(passwordEncoder.encode(password));
             myUserService.save(myUser);
+            redisService.deleteToken(token);
             return ResponseEntity.ok("Your password has been successfully changed!");
         } else {
             return ResponseEntity.status(404).body("The token's lifetime has expired");
         }
     }
 
-    private void messageSender(String email, String token, String url){
+    public ResponseEntity<?> checkCode(String token) {
+        String check = (String) redisService.getToken(token);
+        if (check != null) {
+            return ResponseEntity.ok(check);
+        } else {
+            return ResponseEntity.status(404).body("The token's lifetime has expired");
+        }
+    }
+
+
+    private void messageSender(String email, String token, String url) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
         mailMessage.setSubject("Please, confirm your email");

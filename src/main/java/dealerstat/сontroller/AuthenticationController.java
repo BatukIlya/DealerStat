@@ -27,6 +27,11 @@ public class AuthenticationController {
         return authenticationService.sendMessageForSetPassword(email);
     }
 
+    @GetMapping("/check_code")
+    public ResponseEntity<?> checkCode(@RequestParam("token") String token){
+        return authenticationService.checkCode(token);
+    }
+
     @PostMapping("/reset")
     public ResponseEntity<?> setPassword(@RequestParam("token") String token, @RequestBody String password) {
         return authenticationService.setPassword(password, token);

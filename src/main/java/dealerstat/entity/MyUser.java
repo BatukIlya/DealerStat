@@ -34,7 +34,6 @@ public class MyUser implements Serializable {
     @CreationTimestamp
     private Date createdAt;
 
-
     @JsonIgnore
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -46,5 +45,6 @@ public class MyUser implements Serializable {
 
     @Column(nullable = false)
     private Double rating;
+
 
 }
