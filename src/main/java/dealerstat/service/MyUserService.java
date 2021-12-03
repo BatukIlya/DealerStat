@@ -1,5 +1,6 @@
 package dealerstat.service;
 
+import dealerstat.dto.SearchCriteria;
 import dealerstat.entity.Comment;
 import dealerstat.entity.GameObject;
 import dealerstat.entity.MyUser;

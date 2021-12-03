@@ -1,5 +1,6 @@
 package dealerstat.сontroller;
 
+import dealerstat.dto.SearchCriteria;
 import dealerstat.entity.MyUser;
 import dealerstat.service.MyUserService;
 import io.swagger.annotations.Api;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -29,8 +31,8 @@ public class MyUserController {
     }
 
     @GetMapping("/users/filter_by_desc_rating")
-    public ResponseEntity<?> showAllTradersByDescRating() {
-        return myUserService.showAllTradersByDescRating();
+    public ResponseEntity<?> showAllTradersByDescRating(@RequestBody(required = false) SearchCriteria searchCriteria) {
+        return myUserService.showAllTradersByDescRating(searchCriteria);
     }
 
     @GetMapping("/users/filter_by_asc_rating")

@@ -43,7 +43,6 @@ public class MyUser implements Serializable {
     private boolean isApproved;
 
 
-    @Column(nullable = false)
     private Double rating;
 
 

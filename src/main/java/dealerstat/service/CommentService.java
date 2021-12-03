@@ -1,7 +1,7 @@
 package dealerstat.service;
 
 import dealerstat.dto.CommentDto;
-import dealerstat.dto.MyUserDto;
+import dealerstat.dto.CreateCommentAndTraderDto;
 import dealerstat.entity.Comment;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
@@ -29,8 +29,8 @@ public class CommentService {
         comment.setMessage(commentDto.getMessage());
         comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
 
-        if (myUserService.findMyUserById(traderId) != null) {
-            comment.setTrader(myUserService.findMyUserById(traderId));
+        if (myUserService.findById(traderId) != null) {
+            comment.setTrader(myUserService.findById(traderId));
         } else {
             return ResponseEntity.status(404).body("Trader not found");
         }
@@ -42,11 +42,26 @@ public class CommentService {
 
     }
 
-    public ResponseEntity<?> createCommentAndTrader(CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request) {
-//            myUserService.registerUser(myUserDto);
-        MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail());
-        return createComment(commentDto, myUser.getId(), request);
+    public ResponseEntity<?> createCommentAndTrader(CreateCommentAndTraderDto createCommentAndTraderDto,
+                                                    HttpServletRequest request) {
+        MyUser myUser = new MyUser();
+        myUser.setFirstName(createCommentAndTraderDto.getFirstNameTrader());
+        myUser.setLastName(createCommentAndTraderDto.getLastNameTrader());
+        myUser.setEmail(createCommentAndTraderDto.getEmailTrader());
+        myUser.setRating(0.0);
+        myUser.setApproved(false);
+        myUserService.save(myUser);
 
+        MyUser myUser1 = myUserService.findMyUserByEmail(createCommentAndTraderDto.getEmailTrader());
+
+        Comment comment = new Comment();
+        comment.setMessage(createCommentAndTraderDto.getMessageComment());
+        comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
+        comment.setTrader(myUserService.findById(myUser1.getId()));
+        comment.setRating(createCommentAndTraderDto.getRatingComment());
+        commentRepository.save(comment);
+
+        return ResponseEntity.ok("Comment and Trader successfully created");
     }
 
 

@@ -33,6 +33,7 @@ public class AdminService {
             MyUser myUser = myUserRepository.findById(id).get();
             myUser.setApproved(true);
             myUserService.save(myUser);
+            myUserService.refreshRating(id);
             return ResponseEntity.ok("User successfully approved");
         } else {
             return ResponseEntity.badRequest().body("User not found");

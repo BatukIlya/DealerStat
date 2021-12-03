@@ -5,22 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GameObjectDto {
 
-    @NotNull
+    @NotBlank
     private String name;
 
-    @NotNull
-    @Max(255)
+    @NotBlank
+    @Size(max = 255)
     private String text;
 
-    @NotNull
+    @NotEmpty
     private Game game;
 
 }

@@ -1,12 +1,13 @@
 package dealerstat.сontroller;
 
 import dealerstat.dto.CommentDto;
-import dealerstat.dto.MyUserDto;
+import dealerstat.dto.CreateCommentAndTraderDto;
 import dealerstat.service.CommentService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +22,15 @@ public class CommentController {
 
 
     @PostMapping("/users/{traderId}/comments")
-    public ResponseEntity<?> createComment(@RequestBody @Valid CommentDto commentDto, @PathVariable Long traderId, HttpServletRequest request) {
+    public ResponseEntity<?> createComment(@Valid @RequestBody  CommentDto commentDto, @PathVariable Long traderId,
+                                           HttpServletRequest request) {
         return commentService.createComment(commentDto, traderId, request);
     }
 
     @PostMapping("/users/create_comment_and_trader")
-    public ResponseEntity<?> createCommentAndTrader(@RequestBody @Valid CommentDto commentDto, MyUserDto myUserDto, HttpServletRequest request){
-        return commentService.createCommentAndTrader(commentDto, myUserDto, request);
+    public ResponseEntity<?> createCommentAndTrader(@Valid @RequestBody CreateCommentAndTraderDto createCommentAndTraderDto,
+                                                    HttpServletRequest request) {
+        return commentService.createCommentAndTrader(createCommentAndTraderDto, request);
     }
 
     @GetMapping("/users/{traderId}/comments/{commentId}")
@@ -49,10 +52,9 @@ public class CommentController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
     @PutMapping("/users/{traderId}/comments/{commentId}")
     public ResponseEntity<?> updateComment(@RequestBody CommentDto commentDto,
-                                        @PathVariable Long commentId, @PathVariable Long traderId, HttpServletRequest request){
+                                           @PathVariable Long commentId, @PathVariable Long traderId, HttpServletRequest request) {
         return commentService.updateComment(commentDto, commentId, traderId, request);
     }
-
 
 
 }

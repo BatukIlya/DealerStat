@@ -43,30 +43,40 @@ public class AuthenticationService {
 
     public ResponseEntity<?> registerUser(@RequestBody @Valid MyUserDto myUserDto) {
         String email = (String) redisService.getToken(myUserDto.getEmail());
-        System.out.println(email);
         MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail());
+
         if (myUser == null && email == null) {
-            MyUser myUser1 = new MyUser();
-            myUser1.setFirstName(myUserDto.getFirstName());
-            myUser1.setLastName(myUserDto.getLastName());
-            myUser1.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
-            myUser1.setEmail(myUserDto.getEmail().toLowerCase(Locale.ROOT));
-            myUser1.setRoles(Collections.singletonList(Role.TRADER));
-            myUser1.setRating(0.0);
-
-            String token = UUID.randomUUID().toString();
-
-            messageSender(myUserDto.getEmail(), token, "confirm");
-
-            redisService.putToken(token, myUser1);
-            redisService.putToken(myUserDto.getEmail(), "CHECK");
-
-            return ResponseEntity.ok("To complete the registration, check your email, please.");
-        } else if (myUser != null) {
+            return createMyUserForRegistration(myUserDto, null, null, 0.0);
+        } else if (email != null) {
+            return ResponseEntity.status(404).body("Check your email you have already registered");
+        } else if (myUser != null && myUser.getPassword() != null) {
             return ResponseEntity.status(404).body("User with email " + myUser.getEmail() + " already exist");
         } else {
-            return ResponseEntity.status(404).body("Check your email you have already registered");
+            return createMyUserForRegistration(myUserDto, myUser.getId(), myUser.getCreatedAt(), myUser.getRating());
         }
+    }
+
+    private ResponseEntity createMyUserForRegistration(MyUserDto myUserDto, Long id, Date createdAt,
+                                                       Double rating) {
+        MyUser myUser = new MyUser();
+        if (id != null) {
+            myUser.setId(id);
+            myUser.setCreatedAt(createdAt);
+        }
+        myUser.setFirstName(myUserDto.getFirstName());
+        myUser.setLastName(myUserDto.getLastName());
+        myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
+        myUser.setEmail(myUserDto.getEmail().toLowerCase(Locale.ROOT));
+        myUser.setRoles(Collections.singletonList(Role.TRADER));
+        myUser.setRating(rating);
+        myUser.setApproved(false);
+
+        String token = UUID.randomUUID().toString();
+
+        messageSender(myUserDto.getEmail(), token, "confirm");
+        redisService.putToken(token, myUser);
+        redisService.putToken(myUserDto.getEmail(), "CHECK");
+        return ResponseEntity.ok("To complete the registration, check your email, please.");
     }
 
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto requestDto) {

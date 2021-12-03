@@ -2,18 +2,14 @@ package dealerstat.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Data
 public class AuthenticationRequestDto {
 
-    @NotNull
-    @Email
+    @NotBlank
     private String email;
 
-    @NotNull
-    @Min(8)
+    @NotBlank
     private String password;
 }

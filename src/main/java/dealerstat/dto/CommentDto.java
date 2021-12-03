@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 
 @Data
@@ -15,8 +12,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class CommentDto {
 
-    @NotNull
-    @Max(500)
+    @NotBlank
+    @Size(max = 500)
     private String message;
 
     @DecimalMin(value = "0.00001")
