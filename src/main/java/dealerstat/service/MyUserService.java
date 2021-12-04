@@ -33,8 +33,13 @@ public class MyUserService {
         return myUserRepository.findMyUserByEmail(username).orElse(null);
     }
 
-    public MyUser findMyUserById(Long id) {
-        return myUserRepository.findMyUserByIdAndIsApprovedTrue(id).orElse(null);
+    public ResponseEntity<?> findMyUserById(Long id) {
+        if(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).isPresent()){
+            return ResponseEntity.ok(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get());
+        }else{
+            return ResponseEntity.status(404).body("User not found");
+        }
+
     }
 
     public MyUser findById(Long id) {

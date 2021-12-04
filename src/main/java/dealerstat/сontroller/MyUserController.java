@@ -19,7 +19,7 @@ public class MyUserController {
 
 
     @GetMapping("/users/{id}")
-    public MyUser showTrader(@PathVariable Long id) {
+    public ResponseEntity<?> showTrader(@PathVariable Long id) {
         return myUserService.findMyUserById(id);
     }
 

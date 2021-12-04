@@ -26,7 +26,8 @@ public class GameObjectService {
 
 
     public ResponseEntity<?> createGameObject(GameObjectDto gameObjectDto, HttpServletRequest request) {
-        if (gameRepository.findGameById(gameObjectDto.getGame().getId()).isPresent()) {
+        if (gameRepository.findGameById(gameObjectDto.getGame().getId()).isPresent() &&
+                myUserService.findById(jwtTokenProvider.getId(request)) != null) {
             GameObject gameObject = new GameObject();
             gameObject.setName(gameObjectDto.getName());
             gameObject.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));

@@ -139,7 +139,7 @@ public class AuthenticationService {
     public ResponseEntity<?> setPassword(String password, String token) {
         if (password.length() >= 8) {
             String email = (String) redisService.getToken(token);
-            if (email != null) {
+            if (email != null && myUserService.findMyUserByEmail(email) != null) {
                 MyUser myUser = myUserService.findMyUserByEmail(email);
                 myUser.setPassword(passwordEncoder.encode(password));
                 myUserService.save(myUser);
