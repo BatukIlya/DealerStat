@@ -34,10 +34,10 @@ public class Comment {
     private Date createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @JsonIgnore
-    private boolean isApproved = false;
+    private boolean isApproved;
 
     @Column(nullable = false)
     private Double rating;

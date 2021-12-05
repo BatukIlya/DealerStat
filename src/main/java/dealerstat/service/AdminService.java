@@ -35,7 +35,7 @@ public class AdminService {
             myUserService.refreshRating(id);
             return ResponseEntity.ok("User successfully approved");
         } else {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.status(404).body("User not found");
         }
     }
 

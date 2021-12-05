@@ -3,6 +3,8 @@ package dealerstat.service;
 import dealerstat.dto.GameDto;
 import dealerstat.entity.Game;
 import dealerstat.repository.GameRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameService {
 
-    private final GameRepository gameRepository;
+    private GameRepository gameRepository;
 
     public ResponseEntity<?> createGame(GameDto gameDto) {
         if (gameRepository.findGameByNameContainingIgnoreCase(gameDto.getName()).isEmpty()) {

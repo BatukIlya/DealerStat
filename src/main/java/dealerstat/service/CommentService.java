@@ -31,6 +31,7 @@ public class CommentService {
         if (myUserService.findById(traderId) != null && myUserService.findById(jwtTokenProvider.getId(request)) != null) {
             comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
             comment.setTrader(myUserService.findById(traderId));
+            comment.setApproved(false);
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
@@ -61,6 +62,7 @@ public class CommentService {
             comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
             comment.setTrader(myUserService.findById(myUser1.getId()));
             comment.setRating(createCommentAndTraderDto.getRatingComment());
+            comment.setApproved(false);
             commentRepository.save(comment);
 
             return ResponseEntity.ok(comment);
