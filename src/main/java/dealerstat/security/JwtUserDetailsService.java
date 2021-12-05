@@ -1,7 +1,6 @@
 package dealerstat.security;
 
 import dealerstat.entity.MyUser;
-import dealerstat.security.jwt.JwtUser;
 import dealerstat.security.jwt.JwtUserFactory;
 import dealerstat.service.MyUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 
 @Service
@@ -32,7 +30,6 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
 
-        JwtUser jwtUser = JwtUserFactory.create(user);
-        return jwtUser;
+        return JwtUserFactory.create(user);
     }
 }

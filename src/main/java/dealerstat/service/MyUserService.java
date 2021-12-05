@@ -2,8 +2,10 @@ package dealerstat.service;
 
 import dealerstat.dto.SearchCriteria;
 import dealerstat.entity.Comment;
+import dealerstat.entity.GameObject;
 import dealerstat.entity.MyUser;
 import dealerstat.repository.CommentRepository;
+import dealerstat.repository.GameObjectRepository;
 import dealerstat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,13 +26,20 @@ public class MyUserService {
 
     private final CommentRepository commentRepository;
 
+    private final GameObjectRepository gameObjectRepository;
+
 
     public MyUser findMyUserByEmail(String username) {
         return myUserRepository.findMyUserByEmail(username).orElse(null);
     }
 
-    public MyUser findMyUserById(Long id) {
-        return myUserRepository.findMyUserByIdAndIsApprovedTrue(id).orElse(null);
+    public ResponseEntity<?> findMyUserById(Long id) {
+        if(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).isPresent()){
+            return ResponseEntity.ok(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get());
+        }else{
+            return ResponseEntity.status(404).body("User not found");
+        }
+
     }
 
     public MyUser findById(Long id) {
@@ -44,7 +54,10 @@ public class MyUserService {
         List<MyUser> myUsers = new ArrayList<>();
 
         if (searchCriteria.getGame() != null) {
-            System.out.println(1);
+            if (gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).isPresent()) {
+                List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).get();
+                myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
+            }
         } else if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
             myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
         } else {
@@ -58,7 +71,7 @@ public class MyUserService {
         }
 
         Integer count = searchCriteria.getCount();
-        if (count != null) {
+        if (count != null && count != 0) {
             if (count > myUsers.size()) {
                 count = myUsers.size();
             }

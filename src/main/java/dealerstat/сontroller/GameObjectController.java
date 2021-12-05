@@ -22,25 +22,31 @@ public class GameObjectController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
     @PostMapping("/object")
-    public GameObject createGameObject(@RequestBody @Valid GameObjectDto gameObjectDto, HttpServletRequest request){
+    public ResponseEntity<?> createGameObject(@RequestBody @Valid GameObjectDto gameObjectDto, HttpServletRequest request) {
         return gameObjectService.createGameObject(gameObjectDto, request);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
-    @PutMapping("/{gameObjectId}/updateGameObject")
-  public ResponseEntity<?> updateGameObject(@RequestBody GameObjectDto gameObjectDto, @PathVariable Long gameObjectId,
-                                         HttpServletRequest request){
+    @PutMapping("/object/{gameObjectId}")
+    public ResponseEntity<?> updateGameObject(@RequestBody GameObjectDto gameObjectDto, @PathVariable Long gameObjectId,
+                                              HttpServletRequest request) {
         return gameObjectService.updateGameObject(gameObjectDto, gameObjectId, request);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRADER')")
+    @GetMapping("/object/my")
+    public ResponseEntity<?> showMyGameObject(HttpServletRequest request) {
+        return gameObjectService.showMyGameObjects(request);
+    }
+
     @GetMapping("/object")
-    public List<GameObject> showAllGameObject(){
+    public List<GameObject> showAllGameObject() {
         return gameObjectService.showAll();
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @DeleteMapping("/object/{gameObjectId}")
-    public ResponseEntity<?> deleteGameObject(@PathVariable Long gameObjectId, HttpServletRequest request){
+    public ResponseEntity<?> deleteGameObject(@PathVariable Long gameObjectId, HttpServletRequest request) {
         return gameObjectService.deleteGameObject(gameObjectId, request);
     }
 }

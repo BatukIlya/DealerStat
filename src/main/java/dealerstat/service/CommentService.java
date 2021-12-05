@@ -27,17 +27,18 @@ public class CommentService {
     public ResponseEntity<?> createComment(CommentDto commentDto, Long traderId, HttpServletRequest request) {
         Comment comment = new Comment();
         comment.setMessage(commentDto.getMessage());
-        comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
 
-        if (myUserService.findById(traderId) != null) {
+        if (myUserService.findById(traderId) != null && myUserService.findById(jwtTokenProvider.getId(request)) != null) {
+            comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
             comment.setTrader(myUserService.findById(traderId));
+            comment.setApproved(false);
         } else {
-            return ResponseEntity.status(404).body("Trader not found");
+            return ResponseEntity.status(404).body("User not found");
         }
 
         comment.setRating(commentDto.getRating());
         commentRepository.save(comment);
-        return ResponseEntity.status(201).body("Comment successfully created.");
+        return ResponseEntity.status(201).body(comment);
 
 
     }
@@ -52,16 +53,24 @@ public class CommentService {
         myUser.setApproved(false);
         myUserService.save(myUser);
 
-        MyUser myUser1 = myUserService.findMyUserByEmail(createCommentAndTraderDto.getEmailTrader());
+        if (myUserService.findMyUserByEmail(createCommentAndTraderDto.getEmailTrader()) != null &&
+                myUserService.findById(jwtTokenProvider.getId(request)) != null) {
+            MyUser myUser1 = myUserService.findMyUserByEmail(createCommentAndTraderDto.getEmailTrader());
 
-        Comment comment = new Comment();
-        comment.setMessage(createCommentAndTraderDto.getMessageComment());
-        comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
-        comment.setTrader(myUserService.findById(myUser1.getId()));
-        comment.setRating(createCommentAndTraderDto.getRatingComment());
-        commentRepository.save(comment);
+            Comment comment = new Comment();
+            comment.setMessage(createCommentAndTraderDto.getMessageComment());
+            comment.setAuthor(myUserService.findById(jwtTokenProvider.getId(request)));
+            comment.setTrader(myUserService.findById(myUser1.getId()));
+            comment.setRating(createCommentAndTraderDto.getRatingComment());
+            comment.setApproved(false);
+            commentRepository.save(comment);
 
-        return ResponseEntity.ok("Comment and Trader successfully created");
+            return ResponseEntity.ok(comment);
+        } else {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+
     }
 
 

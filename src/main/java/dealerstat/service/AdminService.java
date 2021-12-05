@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminService {
 
-
     private final CommentRepository commentRepository;
 
     private final MyUserRepository myUserRepository;
@@ -36,10 +35,8 @@ public class AdminService {
             myUserService.refreshRating(id);
             return ResponseEntity.ok("User successfully approved");
         } else {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.status(404).body("User not found");
         }
-
-
     }
 
     public ResponseEntity<?> approveComment(Long id) {
@@ -50,7 +47,7 @@ public class AdminService {
             myUserService.refreshRating(comment.getTrader().getId());
             return ResponseEntity.ok("Comment successfully approved");
         } else {
-            return ResponseEntity.badRequest().body("Comment not found");
+            return ResponseEntity.status(404).body("Comment not found");
         }
     }
 
@@ -60,7 +57,6 @@ public class AdminService {
         } else {
             return ResponseEntity.status(204).body("Request list is empty");
         }
-
     }
 
 }

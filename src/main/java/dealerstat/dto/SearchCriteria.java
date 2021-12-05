@@ -16,8 +16,6 @@ public class SearchCriteria {
     private Game game;
 
 
-
-
 }
 
 

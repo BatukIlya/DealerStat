@@ -23,12 +23,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot_password")
-    public ResponseEntity<?> sendMessageForSetPassword(String email) {
+    public ResponseEntity<?> sendMessageForSetPassword(@RequestBody String email) {
         return authenticationService.sendMessageForSetPassword(email);
     }
 
     @GetMapping("/check_code")
-    public ResponseEntity<?> checkCode(@RequestParam("token") String token){
+    public ResponseEntity<?> checkCode(@RequestParam("token") String token) {
         return authenticationService.checkCode(token);
     }
 

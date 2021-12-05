@@ -2,7 +2,6 @@ package dealerstat.security.jwt;
 
 import dealerstat.entity.Role;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class JwtTokenProvider {
@@ -29,13 +25,15 @@ public class JwtTokenProvider {
     private long validityInMilliseconds;
 
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+
+    public JwtTokenProvider(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @PostConstruct
@@ -66,23 +64,23 @@ public class JwtTokenProvider {
     }
 
     public Long getId(HttpServletRequest req) {
-        if(this.getClaims(req) != null){
-            Number id = (Number) this.getClaims(req).get("id");
+        if (this.getClaims(req) != null) {
+            Number id = (Number) Objects.requireNonNull(this.getClaims(req)).get("id");
             return id.longValue();
-        }else{
+        } else {
             return 0L;
         }
     }
 
-    public List getRole(HttpServletRequest req) {
-        return (List) this.getClaims(req).get("roles");
+    public List<?> getRole(HttpServletRequest req) {
+        return (List<?>) Objects.requireNonNull(this.getClaims(req)).get("roles");
     }
 
     private Claims getClaims(HttpServletRequest req) {
         String token = this.resolveToken(req);
         if (token != null) {
             return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        }else {
+        } else {
             return null;
         }
     }
@@ -94,7 +92,7 @@ public class JwtTokenProvider {
     protected String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         return null;
     }
@@ -103,11 +101,7 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
@@ -116,9 +110,7 @@ public class JwtTokenProvider {
     private List<String> getRoleNames(List<Role> userRoles) {
         List<String> result = new ArrayList<>();
 
-        userRoles.forEach(role -> {
-            result.add(role.getAuthority());
-        });
+        userRoles.forEach(role -> result.add(role.getAuthority()));
 
         return result;
     }
