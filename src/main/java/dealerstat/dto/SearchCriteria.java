@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchCriteria {
+
     private Integer count;
 
     private boolean sortByAsc;
