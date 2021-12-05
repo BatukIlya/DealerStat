@@ -19,6 +19,11 @@ public class GameController {
 
     private final GameService gameService;
 
+    @GetMapping("/")
+    public String hello(){
+        return "Hello";
+    }
+
     @PreAuthorize("hasAnyAuthority('ADMIN','TRADER')")
     @PostMapping("/games")
     public ResponseEntity<?> createGame(@RequestBody @Valid GameDto gameDto) {
