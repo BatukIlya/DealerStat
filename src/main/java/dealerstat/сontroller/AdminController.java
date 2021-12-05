@@ -16,7 +16,6 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
     @GetMapping("/registration_request/")
     public ResponseEntity<?> showUsersRegistrationRequest() {
         return adminService.findUsersRegistrationRequest();
