@@ -34,5 +34,6 @@ public class AdminController {
     @PutMapping("/comment_request/{commentId}/")
     public ResponseEntity<?> approveComment(@PathVariable Long commentId) {
         return adminService.approveComment(commentId);
+
     }
 }
