@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,7 +40,6 @@ class GameServiceTest {
         Game game3 = new Game(3L, "FORTNITE");
 
         List<Game> games = new ArrayList<>();
-
         games.add(game1);
         games.add(game2);
         games.add(game3);
@@ -48,15 +48,16 @@ class GameServiceTest {
 
         List<Game> allGames = gameService.showAllGames();
 
-        verify(gameRepository, Mockito.times(1)).findAll();
         assertThat(allGames.size()).isEqualTo(3);
-        assertThat(allGames.get(0).getName()).isEqualTo("CS");
-        assertThat(allGames.get(1).getName()).isEqualTo("DOTA");
-        assertThat(allGames.get(2).getName()).isEqualTo("FORTNITE");
+        assertThat(allGames.get(0).getName()).isEqualTo(game1.getName());
+        assertThat(allGames.get(1).getName()).isEqualTo(game2.getName());
+        assertThat(allGames.get(2).getName()).isEqualTo(game3.getName());
+        verify(gameRepository, Mockito.times(1)).findAll();
     }
 
     @Test
     public void createGameWhenGameAlreadyExistTest() {
+
         when(gameRepository.findGameByNameContainingIgnoreCase(any())).thenReturn(Optional.of(new Game()));
         ResponseEntity<?> responseEntity = gameService.createGame(new GameDto());
 
@@ -69,27 +70,37 @@ class GameServiceTest {
 
     @Test
     public void createGameWhenGameNotExistTest() {
-        when(gameRepository.findGameByNameContainingIgnoreCase(any())).thenReturn(Optional.empty());
-        ResponseEntity<?> responseEntity = gameService.createGame(new GameDto());
+        GameDto gameDto = new GameDto();
+        gameDto.setName("CS");
 
+        when(gameRepository.findGameByNameContainingIgnoreCase(any())).thenReturn(Optional.empty());
+        ResponseEntity<?> responseEntity = gameService.createGame(gameDto);
+
+        Game game = (Game) responseEntity.getBody();
+
+        assertNotNull(game);
+        assertThat(game.getName()).isEqualTo(gameDto.getName());
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
         assertThat(responseEntity.getBody()).isInstanceOf(Game.class);
 
         verify(gameRepository, Mockito.times(1)).findGameByNameContainingIgnoreCase(any());
-        verify(gameRepository, Mockito.times(1)).save(new Game());
+        verify(gameRepository, Mockito.times(1)).save(game);
     }
 
     @Test
     public void updateGameWhenGameAlreadyExistTest() {
-        when(gameRepository.findGameById(any())).thenReturn(Optional.of(new Game()));
-        ResponseEntity<?> responseEntity = gameService.updateGame(new GameDto(), any());
+        Game game = new Game(1L, "DOTA");
+        GameDto gameDto = new GameDto("CS");
 
+        when(gameRepository.findGameById(any())).thenReturn(Optional.of(game));
+        ResponseEntity<?> responseEntity = gameService.updateGame(gameDto, any());
+
+        assertThat(game.getName()).isEqualTo(gameDto.getName());
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
         assertThat(responseEntity.getBody()).isInstanceOf(Game.class);
 
-
         verify(gameRepository, Mockito.times(2)).findGameById(any());
-        verify(gameRepository, Mockito.times(1)).save(new Game());
+        verify(gameRepository, Mockito.times(1)).save(game);
     }
 
     @Test

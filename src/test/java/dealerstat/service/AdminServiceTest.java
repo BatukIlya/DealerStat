@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,12 +68,14 @@ class AdminServiceTest {
     @Test
     void approveUserIfExist() {
         MyUser myUser = new MyUser();
+        myUser.setApproved(false);
 
         when(myUserRepository.findById(any())).thenReturn(Optional.of(myUser));
 
         ResponseEntity<?> responseEntity = adminService.approveUser(any());
 
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertTrue(myUser.isApproved());
 
         verify(myUserRepository, Mockito.times(2)).findById(any());
         verify(myUserService, Mockito.times(1)).save(myUser);

@@ -47,7 +47,7 @@ public class AdminService {
             myUserService.refreshRating(comment.getTrader().getId());
             return ResponseEntity.ok("Comment successfully approved");
         } else {
-            return ResponseEntity.badRequest().body("Comment not found");
+            return ResponseEntity.status(404).body("Comment not found");
         }
     }
 
