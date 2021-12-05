@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(SpringRunner.class)
-class AdminServiceTest {
+class AdminServiceTestUnit {
 
     @InjectMocks
     private AdminService adminService;

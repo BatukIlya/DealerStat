@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(SpringRunner.class)
-class GameServiceTest {
+class GameServiceTestUnit {
 
     @InjectMocks
     private GameService gameService;
