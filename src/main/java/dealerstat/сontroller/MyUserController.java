@@ -1,7 +1,6 @@
 package dealerstat.сontroller;
 
 import dealerstat.dto.SearchCriteria;
-import dealerstat.entity.MyUser;
 import dealerstat.service.MyUserService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;

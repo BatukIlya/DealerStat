@@ -34,9 +34,9 @@ public class MyUserService {
     }
 
     public ResponseEntity<?> findMyUserById(Long id) {
-        if(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).isPresent()){
+        if (myUserRepository.findMyUserByIdAndIsApprovedTrue(id).isPresent()) {
             return ResponseEntity.ok(myUserRepository.findMyUserByIdAndIsApprovedTrue(id).get());
-        }else{
+        } else {
             return ResponseEntity.status(404).body("User not found");
         }
 

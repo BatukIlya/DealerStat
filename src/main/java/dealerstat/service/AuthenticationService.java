@@ -57,7 +57,7 @@ public class AuthenticationService {
     }
 
     private ResponseEntity<?> createMyUserForRegistration(MyUserDto myUserDto, Long id, Date createdAt,
-                                                       Double rating) {
+                                                          Double rating) {
         MyUser myUser = new MyUser();
 
         if (id != null) {
