@@ -1,7 +1,8 @@
 package dealerstat.config;
 
-import dealerstat.security.jwt.JwtConfigurer;
-import dealerstat.security.jwt.JwtTokenProvider;
+import dealerstat.config.security.jwt.JwtConfigurer;
+import dealerstat.config.security.jwt.JwtTokenProvider;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Data
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;

@@ -1,8 +1,9 @@
-package dealerstat.security.jwt;
+package dealerstat.config.security.jwt;
 
 import dealerstat.entity.Role;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,20 +17,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Component
+@Data
 public class JwtTokenProvider {
 
-    @Value("${jwt.token.secret}")
-    private String secret;
 
-    @Value("${jwt.token.expired}")
-    private long validityInMilliseconds;
+    private String secret = "dealerStat";
 
 
-    private final UserDetailsService userDetailsService;
+    private final long validityInMilliseconds = 18000000;
 
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+//    public JwtTokenProvider(UserDetailsService userDetailsService) {
+//        this.userDetailsService = userDetailsService;
+//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

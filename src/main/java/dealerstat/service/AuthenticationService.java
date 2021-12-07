@@ -4,7 +4,7 @@ import dealerstat.dto.AuthenticationRequestDto;
 import dealerstat.dto.MyUserDto;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
-import dealerstat.security.jwt.JwtTokenProvider;
+import dealerstat.config.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -171,7 +171,7 @@ public class AuthenticationService {
         mailMessage.setSubject("Please, confirm your email");
         mailMessage.setFrom(emailSender);
         mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:" + port + "/auth/" + url + "?token=" + token);
+                + "http://localhost:8080/auth/" + url + "?token=" + token);
 
         emailSenderService.sendEmail(mailMessage);
     }

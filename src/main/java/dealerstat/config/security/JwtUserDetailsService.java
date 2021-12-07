@@ -1,7 +1,7 @@
-package dealerstat.security;
+package dealerstat.config.security;
 
 import dealerstat.entity.MyUser;
-import dealerstat.security.jwt.JwtUserFactory;
+import dealerstat.config.security.jwt.JwtUserFactory;
 import dealerstat.service.MyUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
