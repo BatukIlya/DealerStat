@@ -3,11 +3,10 @@ package dealerstat.сontroller;
 import dealerstat.dto.AuthenticationRequestDto;
 import dealerstat.dto.MyUserDto;
 import dealerstat.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 
 @RestController

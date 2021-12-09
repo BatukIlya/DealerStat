@@ -1,10 +1,11 @@
 package dealerstat.service;
 
+import dealerstat.config.security.jwt.JwtTokenProvider;
 import dealerstat.dto.AuthenticationRequestDto;
 import dealerstat.dto.MyUserDto;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
-import dealerstat.config.security.jwt.JwtTokenProvider;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.*;
 
 @Service

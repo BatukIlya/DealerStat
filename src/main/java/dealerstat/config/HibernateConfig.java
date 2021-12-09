@@ -1,10 +1,13 @@
 package dealerstat.config;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -12,71 +15,86 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-//@ComponentScan({ "dealerstat.config" })
-@EnableJpaRepositories(basePackages = {"dealerstat.repository"})
+@EnableJpaRepositories("dealerstat.repository")
 public class HibernateConfig {
 
+
 //    @Bean
-//    public LocalSessionFactoryBean sessionFactoryBean(){
-//        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-//        sessionFactoryBean.setDataSource(dataSource());
-//        sessionFactoryBean.setPackagesToScan("dealerstat.entity");
-//        sessionFactoryBean.setHibernateProperties(hibernateProperties());
-//
-//        return sessionFactoryBean;
+//    public ValidatorFactory validatorFactory() {
+//        return Validation.buildDefaultValidatorFactory();
 //    }
-
+//    @Bean
+//    public Validator validation (ValidatorFactory factory){
+//        return factory.getValidator();
+//    }
+//
 
 
     @Bean
-    public DataSource dataSource(){
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUrl("jdbc:postgresql://localhost:5432/dealer_stat");
-        ds.setUsername("postgres");
-        ds.setPassword("171213");
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
-        return ds;
+
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("dealerstat.entity");
+
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(additionalProperties());
+        return em;
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory() {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("dealerstat.entity");
-        factory.setDataSource(dataSource());
-        factory.afterPropertiesSet();
-        return factory.getObject();
+    public SpringLiquibase liquibase()  {
+        SpringLiquibase liquibase = new SpringLiquibase();
+
+        liquibase.setDataSource(dataSource());
+        liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.xml");
+
+        return liquibase;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory());
+        txManager.setEntityManagerFactory(entityManagerFactory);
         return txManager;
     }
 
-//    private Properties hibernateProperties(){
-//        Properties properties = new Properties();
-//        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
-//        properties.put("hibernate.show_sql", "true");
-//        properties.put("hibernate.format_sql", "false");
-//
-//        return properties;
-//    }
-//
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/dealer_stat");
+        dataSource.setUsername("postgres");
+        dataSource.setPassword("171213");
+        return dataSource;
+    }
+
 //    @Bean
-//    @Autowired
-//    public HibernateTransactionManager transactionManager(SessionFactory s){
-//        HibernateTransactionManager txManager = new HibernateTransactionManager();
-//        txManager.setSessionFactory(s);
-//
-//        return txManager;
+//    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+//        return new JpaTransactionManager(emf);
 //    }
 
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "none");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+        return properties;
+    }
+
+
+
+
 }
+
+

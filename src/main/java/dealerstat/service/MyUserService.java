@@ -8,7 +8,6 @@ import dealerstat.repository.CommentRepository;
 import dealerstat.repository.GameObjectRepository;
 import dealerstat.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MyUserService {
 

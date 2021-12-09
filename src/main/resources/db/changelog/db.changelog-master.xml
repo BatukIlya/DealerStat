@@ -149,7 +149,7 @@
                                  referencedColumnNames="id"
                                  referencedTableName="my_user"/>
 
-        <createTable tableName="my_user_roles">
+        <createTable tableName="myuser_roles">
             <column name="my_user_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -161,7 +161,7 @@
         </createTable>
 
         <addForeignKeyConstraint baseColumnNames="my_user_id"
-                                 baseTableName="my_user_roles"
+                                 baseTableName="myuser_roles"
                                  constraintName="id_user_role"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
@@ -179,7 +179,7 @@
             <column name="rating" value="0"/>
         </insert>
 
-        <insert tableName="my_user_roles">
+        <insert tableName="myuser_roles">
             <column name="my_user_id" value="1"/>
             <column name="roles" value="ADMIN"/>
         </insert>
@@ -194,7 +194,7 @@
             <column name="rating" value="0"/>
         </insert>
 
-        <insert tableName="my_user_roles">
+        <insert tableName="myuser_roles">
             <column name="my_user_id" value="0"/>
             <column name="roles" value="ANONIM"/>
         </insert>
