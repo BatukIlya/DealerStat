@@ -1,4 +1,4 @@
-package dealerstat.config.security.jwt;
+package dealerstat.config.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 

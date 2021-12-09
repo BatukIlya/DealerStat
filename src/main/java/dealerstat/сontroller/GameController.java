@@ -4,12 +4,12 @@ import dealerstat.dto.GameDto;
 import dealerstat.entity.Game;
 import dealerstat.service.GameService;
 import io.swagger.annotations.Api;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController

@@ -1,5 +1,6 @@
 package dealerstat.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ public class RedisService {
 
     private ValueOperations<String, Object> valueOperations;
 
+    @Value("${redis.token.expired}")
+    private long validityInMilliseconds;
+
 
     public RedisService(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -28,7 +32,6 @@ public class RedisService {
 
 
     public void putToken(String token, Object object) {
-        long validityInMilliseconds = 86400000;
         valueOperations.set(token, object, validityInMilliseconds, TimeUnit.MILLISECONDS);
     }
 

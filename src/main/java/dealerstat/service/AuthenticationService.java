@@ -1,6 +1,6 @@
 package dealerstat.service;
 
-import dealerstat.config.security.jwt.JwtTokenProvider;
+import dealerstat.config.jwt.JwtTokenProvider;
 import dealerstat.dto.AuthenticationRequestDto;
 import dealerstat.dto.MyUserDto;
 import dealerstat.entity.MyUser;
@@ -38,8 +38,7 @@ public class AuthenticationService {
     @Value("${spring.mail.username}")
     private String emailSender;
 
-    @Value("${server.port}")
-    private String port;
+
 
     public ResponseEntity<?> registerUser(@RequestBody @Valid MyUserDto myUserDto) {
         String email = (String) redisService.getToken(myUserDto.getEmail());
@@ -171,7 +170,7 @@ public class AuthenticationService {
         mailMessage.setSubject("Please, confirm your email");
         mailMessage.setFrom(emailSender);
         mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:8080/auth/" + url + "?token=" + token);
+                + "http://localhost:8090/auth/" + url + "?token=" + token);
 
         emailSenderService.sendEmail(mailMessage);
     }

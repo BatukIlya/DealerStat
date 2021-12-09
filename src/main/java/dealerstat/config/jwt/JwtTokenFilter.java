@@ -1,6 +1,7 @@
-package dealerstat.config.security.jwt;
+package dealerstat.config.jwt;
 
-import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -12,7 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Data
+@Slf4j
 public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -33,7 +34,16 @@ public class JwtTokenFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-        filterChain.doFilter(req, res);
+
+        try {
+            filterChain.doFilter(req, res);
+        }catch (AccessDeniedException ade){
+            log.info("Access denied");
+        }
+
     }
 
 }
+
+
+

@@ -1,5 +1,6 @@
 package dealerstat.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,6 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "game_object")
 public class GameObject {
 
     @Id
@@ -28,9 +28,11 @@ public class GameObject {
     private MyUser author;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createdAt;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)

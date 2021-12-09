@@ -1,7 +1,7 @@
 package dealerstat.config;
 
-import dealerstat.config.security.jwt.JwtConfigurer;
-import dealerstat.config.security.jwt.JwtTokenProvider;
+import dealerstat.config.jwt.JwtConfigurer;
+import dealerstat.config.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -30,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

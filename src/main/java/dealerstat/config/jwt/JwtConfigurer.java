@@ -1,4 +1,4 @@
-package dealerstat.config.security.jwt;
+package dealerstat.config.jwt;
 
 import lombok.Data;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

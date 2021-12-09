@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="1.0.3" author="ilya_batuk">
+    <changeSet id="1.0.0" author="ilya_batuk">
         <createTable tableName="my_user">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -149,7 +149,7 @@
                                  referencedColumnNames="id"
                                  referencedTableName="my_user"/>
 
-        <createTable tableName="myuser_roles">
+        <createTable tableName="my_user_roles">
             <column name="my_user_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -161,7 +161,7 @@
         </createTable>
 
         <addForeignKeyConstraint baseColumnNames="my_user_id"
-                                 baseTableName="myuser_roles"
+                                 baseTableName="my_user_roles"
                                  constraintName="id_user_role"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
@@ -179,7 +179,7 @@
             <column name="rating" value="0"/>
         </insert>
 
-        <insert tableName="myuser_roles">
+        <insert tableName="my_user_roles">
             <column name="my_user_id" value="1"/>
             <column name="roles" value="ADMIN"/>
         </insert>
@@ -194,7 +194,7 @@
             <column name="rating" value="0"/>
         </insert>
 
-        <insert tableName="myuser_roles">
+        <insert tableName="my_user_roles">
             <column name="my_user_id" value="0"/>
             <column name="roles" value="ANONIM"/>
         </insert>

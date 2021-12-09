@@ -10,8 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.time.Duration;
 
 @Configuration
-//@EnableRedisRepositories
-//@ComponentScan("dealerstat")
 public class RedisConfig {
 
     @Bean
@@ -20,10 +18,9 @@ public class RedisConfig {
         redisStandaloneConfiguration.setHostName("localhost");
         redisStandaloneConfiguration.setPort(6379);
         redisStandaloneConfiguration.setDatabase(0);
-//        redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
 
         JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-        jedisClientConfiguration.connectTimeout(Duration.ofSeconds(60));// 60s connection timeout
+        jedisClientConfiguration.connectTimeout(Duration.ofSeconds(120));
 
         return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
     }
@@ -34,25 +31,5 @@ public class RedisConfig {
         template.setConnectionFactory(jedisConnectionFactory());
         return template;
     }
-//    @Bean
-//    public JedisConnectionFactory jedisConnectionFactory() {
-////        RedisProperties properties = redisProperties();
-//        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-//        configuration.setHostName("server");
-//        configuration.setPort(6379);
-//        return new JedisConnectionFactory(configuration);
-//    }
-//
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate() {
-//        final RedisTemplate<String, Object> stringRedisTemplate = new RedisTemplate<>();
-//        stringRedisTemplate.setConnectionFactory(jedisConnectionFactory());
-//        return stringRedisTemplate;
-//    }
 
-//    @Bean
-//    @Primary
-//    public RedisProperties redisProperties() {
-//        return new RedisProperties();
-//    }
 }

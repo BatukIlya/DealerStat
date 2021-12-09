@@ -10,14 +10,4 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan("dealerstat")
 public class WebConfig {
 
-//    @Bean
-//    public ValidatorFactory validatorFactory() {
-//        return Validation.buildDefaultValidatorFactory();
-//    }
-//
-//
-//    @Bean
-//    public HibernateValidator validationProvider() {
-//        return new HibernateValidator();
-//    }
 }

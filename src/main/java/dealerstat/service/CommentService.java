@@ -6,7 +6,7 @@ import dealerstat.entity.Comment;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
 import dealerstat.repository.CommentRepository;
-import dealerstat.config.security.jwt.JwtTokenProvider;
+import dealerstat.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

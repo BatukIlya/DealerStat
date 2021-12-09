@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "game")
 public class Game {
 
 
