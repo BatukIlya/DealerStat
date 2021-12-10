@@ -24,11 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final RestAccessDeniedHandler accessDeniedHandler;
 
-//    @Autowired
-//    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-//        this.jwtTokenProvider = jwtTokenProvider;
-//    }
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

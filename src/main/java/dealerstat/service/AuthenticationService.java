@@ -52,8 +52,7 @@ public class AuthenticationService {
         }
     }
 
-    private ResponseEntity<?> createMyUserForRegistration(MyUserDto myUserDto, Long id, Date createdAt,
-                                                          Double rating) {
+    private ResponseEntity<?> createMyUserForRegistration(MyUserDto myUserDto, Long id, Date createdAt, Double rating) {
         MyUser myUser = new MyUser();
 
         if (id != null) {
@@ -93,9 +92,9 @@ public class AuthenticationService {
                 Map<Object, Object> response = new HashMap<>();
                 response.put("username", email);
                 response.put("token", token);
-
                 return ResponseEntity.ok(response);
             }
+
         } catch (AuthenticationException e) {
             return ResponseEntity.status(404).body("Invalid email or password");
         }
@@ -121,9 +120,7 @@ public class AuthenticationService {
         if (myUser != null) {
             String token = UUID.randomUUID().toString();
             messageSender(email, token, "reset");
-
             redisService.putToken(token, email);
-
             return ResponseEntity.ok("Confirmation email has been sent to your email");
         } else {
             return ResponseEntity.status(404).body("User not found");
@@ -133,6 +130,7 @@ public class AuthenticationService {
     public ResponseEntity<?> setPassword(String password, String token) {
         if (password.length() >= 8) {
             String email = (String) redisService.getToken(token);
+
             if (email != null && myUserService.findMyUserByEmail(email) != null) {
                 MyUser myUser = myUserService.findMyUserByEmail(email);
                 myUser.setPassword(passwordEncoder.encode(password));
@@ -142,6 +140,7 @@ public class AuthenticationService {
             } else {
                 return ResponseEntity.status(404).body("The token's lifetime has expired");
             }
+
         } else {
             return ResponseEntity.status(404).body("Password should be more than 8");
         }
@@ -166,7 +165,6 @@ public class AuthenticationService {
         mailMessage.setFrom(emailSender);
         mailMessage.setText("To confirm your account, please click here : "
                 + "http://localhost:8090/auth/" + url + "?token=" + token);
-
         emailSenderService.sendEmail(mailMessage);
     }
 

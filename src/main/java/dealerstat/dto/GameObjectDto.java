@@ -20,7 +20,6 @@ public class GameObjectDto {
     @Size(max = 255)
     private String text;
 
-
     private Game game;
 
 }

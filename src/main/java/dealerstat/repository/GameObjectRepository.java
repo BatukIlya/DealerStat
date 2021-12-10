@@ -16,5 +16,4 @@ public interface GameObjectRepository extends JpaRepository<GameObject, Long> {
 
     Optional<List<GameObject>> findAllByAuthorId(Long id);
 
-
 }

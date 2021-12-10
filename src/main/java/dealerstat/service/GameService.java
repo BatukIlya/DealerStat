@@ -28,12 +28,12 @@ public class GameService {
     }
 
     public List<Game> showAllGames() {
-        List<Game> all = gameRepository.findAll();
-        return all;
+        return gameRepository.findAll();
     }
 
     public ResponseEntity<?> updateGame(GameDto gameDto, Long id) {
         if (gameRepository.findGameById(id).isPresent()) {
+
             if (gameRepository.findGameByNameContainingIgnoreCase(gameDto.getName()).isEmpty()) {
                 Game game = gameRepository.findGameById(id).get();
                 game.setName(gameDto.getName());
@@ -42,6 +42,7 @@ public class GameService {
             } else {
                 return ResponseEntity.status(404).body("This game already exist");
             }
+
         } else {
             return ResponseEntity.status(404).body("Game not found");
         }

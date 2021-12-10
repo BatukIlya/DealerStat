@@ -39,8 +39,6 @@ public class CommentService {
         comment.setRating(commentDto.getRating());
         commentRepository.save(comment);
         return ResponseEntity.status(201).body(comment);
-
-
     }
 
     public ResponseEntity<?> createCommentAndTrader(CreateCommentAndTraderDto createCommentAndTraderDto,
@@ -95,7 +93,9 @@ public class CommentService {
     public ResponseEntity<?> updateComment(CommentDto commentDto, Long commentId, Long traderId, HttpServletRequest request) {
         if (commentRepository.findCommentByIdAndTraderIdAndIsApprovedIsTrue(commentId, traderId).isPresent()) {
             Comment comment = commentRepository.findCommentByIdAndTraderIdAndIsApprovedIsTrue(commentId, traderId).get();
+
             if (jwtTokenProvider.getId(request).equals(comment.getAuthor().getId())) {
+
                 if (commentDto.getRating() <= 5 && commentDto.getRating() >= 0) {
                     comment.setMessage(commentDto.getMessage());
                     comment.setRating(commentDto.getRating());
@@ -105,9 +105,11 @@ public class CommentService {
                 } else {
                     return ResponseEntity.badRequest().body("Rating should be >0 and <5");
                 }
+
             } else {
                 return ResponseEntity.status(403).body("Access denied");
             }
+
         } else {
             return ResponseEntity.status(404).body("Comment not found");
         }
@@ -116,6 +118,7 @@ public class CommentService {
 
     public ResponseEntity<?> deleteComment(Long commentId, Long traderId, HttpServletRequest request) {
         if (commentRepository.findCommentByIdAndTraderIdAndIsApprovedIsTrue(commentId, traderId).isPresent()) {
+
             Comment comment = commentRepository.findCommentByIdAndTraderIdAndIsApprovedIsTrue(commentId, traderId).get();
             if (jwtTokenProvider.getId(request).equals(comment.getAuthor().getId())
                     || (jwtTokenProvider.getRole(request).contains(Role.ADMIN))) {
@@ -125,6 +128,7 @@ public class CommentService {
             } else {
                 return ResponseEntity.status(403).body("Access denied");
             }
+
         } else {
             return ResponseEntity.status(404).body("Comment not found");
         }

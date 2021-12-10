@@ -47,5 +47,4 @@ public class MyUser implements Serializable {
 
     private Double rating;
 
-
 }

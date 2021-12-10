@@ -12,10 +12,8 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 public class CreateCommentAndTraderDto {
 
-
     @Size(max = 100)
     private String firstNameTrader;
-
 
     @Size(max = 100)
     private String lastNameTrader;
