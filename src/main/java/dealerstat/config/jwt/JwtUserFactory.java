@@ -12,9 +12,6 @@ import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
 
-    public JwtUserFactory() {
-    }
-
     public static JwtUser create(MyUser user) {
         return new JwtUser(
                 user.getId(),
