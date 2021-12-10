@@ -34,10 +34,14 @@ public class GameService {
 
     public ResponseEntity<?> updateGame(GameDto gameDto, Long id) {
         if (gameRepository.findGameById(id).isPresent()) {
-            Game game = gameRepository.findGameById(id).get();
-            game.setName(gameDto.getName());
-            gameRepository.save(game);
-            return ResponseEntity.ok(game);
+            if (gameRepository.findGameByNameContainingIgnoreCase(gameDto.getName()).isEmpty()) {
+                Game game = gameRepository.findGameById(id).get();
+                game.setName(gameDto.getName());
+                gameRepository.save(game);
+                return ResponseEntity.ok(game);
+            } else {
+                return ResponseEntity.status(404).body("This game already exist");
+            }
         } else {
             return ResponseEntity.status(404).body("Game not found");
         }

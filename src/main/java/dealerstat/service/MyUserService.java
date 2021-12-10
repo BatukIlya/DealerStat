@@ -55,6 +55,8 @@ public class MyUserService {
             if (gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).isPresent()) {
                 List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).get();
                 myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
+            }else{
+                return ResponseEntity.status(404).body("Game not found");
             }
         } else if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
             myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
