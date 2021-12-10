@@ -19,7 +19,7 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class  SwaggerConfig implements WebMvcConfigurer {
+public class SwaggerConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

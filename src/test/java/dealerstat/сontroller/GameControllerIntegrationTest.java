@@ -1,10 +1,11 @@
-package dealerstat.service;
+package dealerstat.сontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dealerstat.config.WebConfig;
 import dealerstat.dto.GameDto;
 import dealerstat.entity.Game;
 import dealerstat.repository.GameRepository;
+import dealerstat.service.GameService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
 @WithMockUser(username = "admin", authorities = "ADMIN")
-public class GameServiceIntegrationTest {
+public class GameControllerIntegrationTest {
 
     @Resource
     private WebApplicationContext webApplicationContext;

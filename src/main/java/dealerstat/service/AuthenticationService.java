@@ -37,7 +37,6 @@ public class AuthenticationService {
     private String emailSender;
 
 
-
     public ResponseEntity<?> registerUser(MyUserDto myUserDto) {
         String email = (String) redisService.getToken(myUserDto.getEmail());
         MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail().toLowerCase(Locale.ROOT));

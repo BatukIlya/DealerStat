@@ -26,7 +26,7 @@ public class RedisService {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         valueOperations = redisTemplate.opsForValue();
     }
 

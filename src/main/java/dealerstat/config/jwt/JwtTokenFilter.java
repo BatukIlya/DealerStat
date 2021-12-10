@@ -37,7 +37,7 @@ public class JwtTokenFilter extends GenericFilterBean {
 
         try {
             filterChain.doFilter(req, res);
-        }catch (AccessDeniedException ade){
+        } catch (AccessDeniedException ade) {
             log.info("Access denied");
         }
 

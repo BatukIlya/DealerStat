@@ -26,7 +26,7 @@ public class AdminController {
         return adminService.approveUser(id);
     }
 
-    @GetMapping("/comment_request")
+    @GetMapping("/comment_request/")
     public ResponseEntity<?> showCommentRequest() {
         return adminService.findCommentsRequest();
     }
