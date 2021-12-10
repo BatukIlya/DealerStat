@@ -32,15 +32,18 @@ public class DataSourceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+
         vendorAdapter.setDatabase(Database.POSTGRESQL);
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(true);
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+
         em.setDataSource(dataSource());
         em.setPackagesToScan("dealerstat.entity");
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
+
         return em;
     }
 
@@ -65,10 +68,12 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
         dataSource.setDriverClassName(env.getRequiredProperty("spring.datasource.driver-class-name"));
         dataSource.setUrl(env.getRequiredProperty("spring.datasource.url"));
         dataSource.setUsername(env.getRequiredProperty("spring.datasource.username"));
         dataSource.setPassword(env.getRequiredProperty("spring.datasource.password"));
+
         return dataSource;
     }
 
@@ -79,6 +84,7 @@ public class DataSourceConfig {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
+
         properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.format_sql", "true");
         properties.put("hibernate.implicit_naming_strategy", "dealerstat.config.ImplicitNamingStrategyImpl");

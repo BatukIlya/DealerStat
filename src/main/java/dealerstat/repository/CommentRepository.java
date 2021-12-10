@@ -18,5 +18,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Optional<List<Comment>> findAllByTraderIdAndIsApprovedIsTrue(Long id);
 
-
 }

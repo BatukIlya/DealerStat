@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +36,6 @@ public class MyUserService {
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
-
     }
 
     public MyUser findById(Long id) {
@@ -49,15 +47,17 @@ public class MyUserService {
     }
 
     public ResponseEntity<?> showAllTraders(SearchCriteria searchCriteria) {
-        List<MyUser> myUsers = new ArrayList<>();
+        List<MyUser> myUsers;
 
         if (searchCriteria.getGame() != null) {
+
             if (gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).isPresent()) {
                 List<GameObject> gameObjects = gameObjectRepository.findAllByGameId(searchCriteria.getGame().getId()).get();
                 myUsers = gameObjects.stream().map(GameObject::getAuthor).distinct().collect(Collectors.toList());
             }else{
                 return ResponseEntity.status(404).body("Game not found");
             }
+
         } else if (myUserRepository.findAllByIsApprovedIsTrue().isPresent()) {
             myUsers = myUserRepository.findAllByIsApprovedIsTrue().get();
         } else {

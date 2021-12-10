@@ -45,6 +45,7 @@ public class GameObjectService {
 
         if (gameObjectRepository.findGameObjectById(id).isPresent()) {
             GameObject gameObject = gameObjectRepository.findGameObjectById(id).get();
+
             if (jwtTokenProvider.getId(request).equals(gameObject.getAuthor().getId())) {
                 gameObject.setName(gameObjectDto.getName());
                 gameObject.setText(gameObjectDto.getText());
@@ -63,12 +64,14 @@ public class GameObjectService {
 
         if (gameObjectRepository.findGameObjectById(id).isPresent()) {
             GameObject gameObject = gameObjectRepository.findGameObjectById(id).get();
+
             if (jwtTokenProvider.getId(request).equals(gameObject.getAuthor().getId())) {
                 gameObjectRepository.deleteById(id);
                 return ResponseEntity.ok("Game object is deleted");
             } else {
                 return ResponseEntity.status(403).body("Access denied");
             }
+
         } else {
             return ResponseEntity.status(404).body("Game object not found");
         }
@@ -82,6 +85,7 @@ public class GameObjectService {
 
     public ResponseEntity<?> showMyGameObjects(HttpServletRequest request) {
         Long id = jwtTokenProvider.getId(request);
+
         if (gameObjectRepository.findAllByAuthorId(id).isPresent()) {
             return ResponseEntity.ok(gameObjectRepository.findAllByAuthorId(id).get());
         } else {
