@@ -5,7 +5,6 @@ import dealerstat.dto.AuthenticationRequestDto;
 import dealerstat.dto.MyUserDto;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -40,7 +38,7 @@ public class AuthenticationService {
 
 
 
-    public ResponseEntity<?> registerUser(@RequestBody @Valid MyUserDto myUserDto) {
+    public ResponseEntity<?> registerUser(MyUserDto myUserDto) {
         String email = (String) redisService.getToken(myUserDto.getEmail());
         MyUser myUser = myUserService.findMyUserByEmail(myUserDto.getEmail().toLowerCase(Locale.ROOT));
 
@@ -63,7 +61,6 @@ public class AuthenticationService {
             myUser.setId(id);
             myUser.setCreatedAt(createdAt);
         }
-
         myUser.setFirstName(myUserDto.getFirstName());
         myUser.setLastName(myUserDto.getLastName());
         myUser.setPassword(passwordEncoder.encode(myUserDto.getPassword()));
@@ -81,7 +78,7 @@ public class AuthenticationService {
         return ResponseEntity.ok("To complete the registration, check your email, please.");
     }
 
-    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto requestDto) {
+    public ResponseEntity<?> login(AuthenticationRequestDto requestDto) {
         try {
             String email = requestDto.getEmail().toLowerCase(Locale.ROOT);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
@@ -124,7 +121,6 @@ public class AuthenticationService {
 
         if (myUser != null) {
             String token = UUID.randomUUID().toString();
-
             messageSender(email, token, "reset");
 
             redisService.putToken(token, email);

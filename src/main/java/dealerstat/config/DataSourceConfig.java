@@ -44,7 +44,6 @@ public class DataSourceConfig {
         return em;
     }
 
-
     @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
@@ -93,7 +92,6 @@ public class DataSourceConfig {
 
         return properties;
     }
-
 
 }
 
