@@ -1,4 +1,4 @@
-package dealerstat.security.jwt;
+package dealerstat.config.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

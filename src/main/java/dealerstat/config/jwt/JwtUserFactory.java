@@ -1,4 +1,4 @@
-package dealerstat.security.jwt;
+package dealerstat.config.jwt;
 
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;

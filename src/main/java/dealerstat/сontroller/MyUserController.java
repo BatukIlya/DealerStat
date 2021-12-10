@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MyUserController {
 
-
     private final MyUserService myUserService;
-
 
     @GetMapping("/users/{id}")
     public ResponseEntity<?> showTrader(@PathVariable Long id) {

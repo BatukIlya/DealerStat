@@ -1,10 +1,10 @@
 package dealerstat.service;
 
+import dealerstat.config.jwt.JwtTokenProvider;
 import dealerstat.dto.GameObjectDto;
 import dealerstat.entity.GameObject;
 import dealerstat.repository.GameObjectRepository;
 import dealerstat.repository.GameRepository;
-import dealerstat.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

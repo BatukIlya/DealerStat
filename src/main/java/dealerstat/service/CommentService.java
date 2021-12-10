@@ -1,12 +1,12 @@
 package dealerstat.service;
 
+import dealerstat.config.jwt.JwtTokenProvider;
 import dealerstat.dto.CommentDto;
 import dealerstat.dto.CreateCommentAndTraderDto;
 import dealerstat.entity.Comment;
 import dealerstat.entity.MyUser;
 import dealerstat.entity.Role;
 import dealerstat.repository.CommentRepository;
-import dealerstat.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

@@ -16,7 +16,6 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
     @GetMapping("/registration_request/")
     public ResponseEntity<?> showUsersRegistrationRequest() {
         return adminService.findUsersRegistrationRequest();
@@ -27,7 +26,7 @@ public class AdminController {
         return adminService.approveUser(id);
     }
 
-    @GetMapping("/comment_request")
+    @GetMapping("/comment_request/")
     public ResponseEntity<?> showCommentRequest() {
         return adminService.findCommentsRequest();
     }
@@ -35,5 +34,6 @@ public class AdminController {
     @PutMapping("/comment_request/{commentId}/")
     public ResponseEntity<?> approveComment(@PathVariable Long commentId) {
         return adminService.approveComment(commentId);
+
     }
 }
